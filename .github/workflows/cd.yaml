@@ -2,9 +2,10 @@ name: Deploy
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+    inputs:
+      workspace-name:
+        type: string
+        required: true
 
 jobs:
   deploy_workspace_to_azure:
@@ -12,5 +13,5 @@ jobs:
     uses: ./.github/workflows/function_deploy.yaml
     with:
       environment: dev
-      workspace-name: ./function_app
+      workspace-name: ${{inputs.workspace-name}}
     secrets: inherit
