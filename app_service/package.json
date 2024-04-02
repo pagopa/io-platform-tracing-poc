@@ -1,0 +1,41 @@
+{
+  "name": "app_service",
+  "version": "1.0.0",
+  "description": "Test App Service",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --outDir dist",
+    "generate": "npm-run-all generate:*",
+    "generate:api-test": "rimraf ./generated/definitions && shx mkdir -p ./generated/definitions && gen-api-models --api-spec ../function_app/openapi/index.yaml --no-strict --out-dir ./generated/definitions --request-types --response-decoders --client",
+    "start": "node -r dotenv/config dist/app.js",
+    "start-ts": "ts-node -r dotenv/config src/app.ts",
+    "test": "jest",
+    "lint": "eslint . -c .eslintrc.js --ext .ts,.tsx"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@pagopa/ts-commons": "^13.0.0",
+    "body-parser": "^1.20.2",
+    "node-fetch": "^3.3.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.18.2",
+    "fp-ts": "^2.16.1",
+    "io-ts": "^2.2.20",
+    "ulid": "^2.3.0"
+  },
+  "devDependencies": {
+    "@pagopa/eslint-config": "^3.0.0",
+    "@pagopa/openapi-codegen-ts": "^13.1.0",
+    "@types/express": "4.17.20",
+    "@types/body-parser": "^1.19.4",
+    "@types/jest": "^26.0.19",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^26.6.3",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.1",
+    "shx": "^0.3.2",
+    "typescript": "^4.9.4"
+  }
+}

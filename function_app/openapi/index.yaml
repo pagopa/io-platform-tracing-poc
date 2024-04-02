@@ -14,7 +14,7 @@ basePath: /service-messages/api/v1
 schemes:
   - https
 security:
-  - SubscriptionKey: []
+  - ApiKeyAuth: []
 paths:
   /ping:
     get:
@@ -101,8 +101,7 @@ definitions:
     x-import: '@pagopa/ts-commons/lib/strings'
     example: SPNDNL80R13C555X
 securityDefinitions:
-  SubscriptionKey:
+  ApiKeyAuth:
     type: apiKey
-    name: Ocp-Apim-Subscription-Key
     in: header
-    description: The API key obtained through the developer portal.
+    name: X-Functions-Key
