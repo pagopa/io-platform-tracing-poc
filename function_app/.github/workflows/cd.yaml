@@ -9,5 +9,5 @@ jobs:
     uses: ./function_deploy.yaml
     with:
       environment: dev
-      workspace-name: ./
+      workspace-name: io-platform-tracing-poc
     secrets: inherit

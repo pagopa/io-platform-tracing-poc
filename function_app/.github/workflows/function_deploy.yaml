@@ -59,16 +59,9 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Deploy to ${{ vars.AZURE_WEB_APP_NAME }} staging slot
+      - name: Deploy to prod slot
         uses: azure/webapps-deploy@v2
         with:
-          resource-group-name: ${{ vars.AZURE_WEB_APP_RESOURCE_GROUP }}
-          app-name: ${{ vars.AZURE_WEB_APP_NAME }}
-          slot-name: staging
+          resource-group-name: dev-andreag
+          app-name: testai-functionapp
           package: ${{ inputs.workspace-name }}.zip
-
-      - name: Check staging health
-        run: curl --retry 5 --retry-max-time 120 --retry-all-errors -f 'https://${{ vars.AZURE_WEB_APP_NAME }}-staging.azurewebsites.net${{ vars.HEALTH_CHECK_PATH }}'
-
-      - name: Swap staging slot with production
-        run: az webapp deployment slot swap -g ${{ vars.AZURE_WEB_APP_RESOURCE_GROUP }} -n ${{ vars.AZURE_WEB_APP_NAME }} --slot staging --target-slot production
