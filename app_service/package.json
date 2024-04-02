@@ -7,7 +7,7 @@
     "prebuild": "npm-run-all generate",
     "build": "tsc --outDir dist",
     "generate": "npm-run-all generate:*",
-    "generate:api-test": "rimraf ./generated/definitions && shx mkdir -p ./generated/definitions && gen-api-models --api-spec ../function_app/openapi/index.yaml --no-strict --out-dir ./generated/definitions --request-types --response-decoders --client",
+    "generate:api-test": "rimraf ./generated/definitions && shx mkdir -p ./generated/definitions && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/io-platform-tracing-poc/main/function_app/openapi/index.yaml --no-strict --out-dir ./generated/definitions --request-types --response-decoders --client",
     "start": "node -r dotenv/config dist/app.js",
     "start-ts": "ts-node -r dotenv/config src/app.ts",
     "test": "jest",
