@@ -9,7 +9,7 @@ on:
 jobs:
   deploy_workspace_to_azure:
     name: Deploy
-    uses: ./function_deploy.yaml
+    uses: ./.github/workflows/function_deploy.yaml
     with:
       environment: dev
       workspace-name: ./function_app
