@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "outDir": "dist",
+    "rootDir": "./",
+    "sourceMap": true,
+    "strict": false,
+    "resolveJsonModule": true
+  }, 
+  "exclude": [
+    "node_modules",
+    "dist",
+    "__mocks__",
+    "docker",
+    "**/__tests__",
+    "**/__integrations__",
+    "Dangerfile.ts"
+  ]
+}
