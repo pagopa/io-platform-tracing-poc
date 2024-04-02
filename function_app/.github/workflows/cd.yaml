@@ -1,0 +1,13 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy_workspace_to_azure:
+    name: Deploy
+    uses: ./function_deploy.yaml
+    with:
+      environment: dev
+      workspace-name: ./
+    secrets: inherit
