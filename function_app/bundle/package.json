@@ -70,7 +70,7 @@
     "html-to-text": "^5.1.1",
     "io-ts": "^2.2.16",
     "node-fetch": "^2.6.7",
-    "nodemailer": "^6.4.16",
+    "nodemailer": "^6.9.9",
     "nodemailer-sendgrid": "^1.0.3",
     "redis": "^4.6.13",
     "ts-pattern": "^4.0.5",
