@@ -4,6 +4,7 @@
   "description": "Test App Service",
   "main": "index.js",
   "scripts": {
+    "prebuild": "npm-run-all generate",
     "build": "tsc --outDir dist",
     "generate": "npm-run-all generate:*",
     "generate:api-test": "rimraf ./generated/definitions && shx mkdir -p ./generated/definitions && gen-api-models --api-spec ../function_app/openapi/index.yaml --no-strict --out-dir ./generated/definitions --request-types --response-decoders --client",
