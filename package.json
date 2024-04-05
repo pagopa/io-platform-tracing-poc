@@ -1,0 +1,22 @@
+{
+    "name": "io-platform-tracing-poc",
+    "private": true,
+    "scripts": {
+      "test": "turbo run test --no-daemon",
+      "format": "turbo run format --no-daemon",
+      "build": "turbo run build --no-daemon",
+      "code-review": "turbo run typecheck lint test",
+      "version": "changeset version && yarn install --mode update-lockfile",
+      "release": "changeset tag"
+    },
+    "workspaces": [
+      "app_service/*",
+      "function_app/*"
+    ],
+    "devDependencies": {
+      "@changesets/cli": "^2.26.2",
+      "azure-functions-core-tools": "^4.0.5455",
+      "turbo": "^1.12.2"
+    },
+    "packageManager": "yarn@3.8.0"
+  }
