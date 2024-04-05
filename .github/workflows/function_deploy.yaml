@@ -35,10 +35,10 @@ jobs:
       - name: Make the azure function app artifact
         id: make-function-app-artifact
         run: |
+          cd apps/function_app
           npm pkg set --json "bundledDependencies"=true
           npm pkg set --json "files"='["**/function.json", "dist", "host.json","extensions.csproj"]'
           npx npm-pack-zip
-          echo "$(ls -l)"
           echo "artifact-path=$(realpath ${{ inputs.workspace-name }}.zip)" >> "$GITHUB_OUTPUT"
         shell: bash
 
