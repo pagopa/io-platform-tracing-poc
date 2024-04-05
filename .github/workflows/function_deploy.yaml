@@ -38,6 +38,7 @@ jobs:
           npm pkg set --json "bundledDependencies"=true
           npm pkg set --json "files"='["**/function.json", "dist", "host.json","extensions.csproj"]'
           npx npm-pack-zip
+          echo "$(ls -l)"
           echo "artifact-path=$(realpath ${{ inputs.workspace-name }}.zip)" >> "$GITHUB_OUTPUT"
         shell: bash
 
