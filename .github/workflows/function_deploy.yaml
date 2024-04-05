@@ -18,10 +18,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Build workspace
-        uses: "pagopa/io-std/build-workspace@main"
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          workspace-name: ${{ inputs.workspace-name }}
+          node-version-file: ".node-version"
+          cache: "yarn"
+          cache-dependency-path: "./out/yarn.lock"
+  
+      - name: Install dependencies
+        run: yarn install --immutable
+        shell: bash
+        working-directory: ./out
+      
+      - name: Build ${{ inputs.workspace-name }}
+        run: yarn build
+        shell: bash
+        working-directory: ./out
 
       - name: Make workspace artifact
         id: make_artifact
