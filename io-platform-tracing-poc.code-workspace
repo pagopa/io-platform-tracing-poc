@@ -1,0 +1,16 @@
+{
+    "folders": [
+      {
+        "path": "."
+      },
+      {
+        "path": "apps/app_service"
+      },
+      {
+        "path": "apps/function_app"
+      }
+    ],
+    "settings": {
+      "azureFunctions.funcCliPath": "../../node_modules/.bin/func"
+    }
+  }

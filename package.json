@@ -10,8 +10,7 @@
       "release": "changeset tag"
     },
     "workspaces": [
-      "app_service/*",
-      "function_app/*"
+      "apps/*"
     ],
     "devDependencies": {
       "@changesets/cli": "^2.26.2",
