@@ -1,5 +1,5 @@
 {
-  "name": "@pagopa/io-platform-trancing-poc-fn-app",
+  "name": "function_app",
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
