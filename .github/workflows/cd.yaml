@@ -9,5 +9,5 @@ jobs:
     uses: ./.github/workflows/function_deploy.yaml
     with:
       environment: dev
-      workspace-name: function_app
+      workspace-name: ./function_app
     secrets: inherit
