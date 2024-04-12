@@ -7,7 +7,7 @@ export type IsBetaTester = (fiscalCode: FiscalCode) => boolean;
  *
  * @param betaTesters the beta tester list
  */
-export const getIsBetaTester = (
-  betaTesters: ReadonlyArray<NonEmptyString>
-): IsBetaTester => (fiscalCode): boolean =>
-  betaTesters.includes((fiscalCode as undefined) as NonEmptyString);
+export const getIsBetaTester =
+  (betaTesters: ReadonlyArray<NonEmptyString>): IsBetaTester =>
+  (fiscalCode): boolean =>
+    betaTesters.includes(fiscalCode as undefined as NonEmptyString);

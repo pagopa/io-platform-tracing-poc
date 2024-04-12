@@ -11,7 +11,7 @@ const app = express();
 secureExpressApp(app);
 
 // Add express route
-app.get("/api/ready", Info(cosmosdbClient));
+app.get("/ready", Info(cosmosdbClient));
 
 const azureFunctionHandler = createAzureFunctionHandler(app);
 

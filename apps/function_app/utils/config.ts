@@ -41,24 +41,24 @@ export type ReqServiceIdConfig = t.TypeOf<typeof ReqServiceIdConfig>;
 export const ReqServiceIdConfig = t.union([
   t.interface({
     NODE_ENV: t.literal("production"),
-    REQ_SERVICE_ID: t.undefined
+    REQ_SERVICE_ID: t.undefined,
   }),
   t.interface({
     NODE_ENV: AnyBut("production", t.string),
-    REQ_SERVICE_ID: NonEmptyString
-  })
+    REQ_SERVICE_ID: NonEmptyString,
+  }),
 ]);
 
 export const RedisParams = t.intersection([
   t.interface({
-    REDIS_URL: NonEmptyString
+    REDIS_URL: NonEmptyString,
   }),
   t.partial({
     REDIS_CLUSTER_ENABLED: t.boolean,
     REDIS_PASSWORD: NonEmptyString,
     REDIS_PORT: NonEmptyString,
-    REDIS_TLS_ENABLED: t.boolean
-  })
+    REDIS_TLS_ENABLED: t.boolean,
+  }),
 ]);
 export type RedisParams = t.TypeOf<typeof RedisParams>;
 
@@ -66,7 +66,7 @@ export const FeatureFlagType = t.union([
   t.literal("none"),
   t.literal("beta"),
   t.literal("canary"),
-  t.literal("prod")
+  t.literal("prod"),
 ]);
 export type FeatureFlagType = t.TypeOf<typeof FeatureFlagType>;
 
@@ -94,11 +94,11 @@ export const IConfig = t.intersection([
 
     STORAGE_CONNECTION_STRING: NonEmptyString,
 
-    isProduction: t.boolean
+    isProduction: t.boolean,
     /* eslint-enable sort-keys */
   }),
   ReqServiceIdConfig,
-  RedisParams
+  RedisParams,
 ]);
 
 // No need to re-evaluate this object for each call
@@ -107,12 +107,12 @@ const errorOrConfig: t.Validation<IConfig> = IConfig.decode({
 
   REDIS_CLUSTER_ENABLED: pipe(
     O.fromNullable(process.env.REDIS_CLUSTER_ENABLED),
-    O.map(_ => _.toLowerCase() === "true"),
+    O.map((_) => _.toLowerCase() === "true"),
     O.toUndefined
   ),
   REDIS_TLS_ENABLED: pipe(
     O.fromNullable(process.env.REDIS_TLS_ENABLED),
-    O.map(_ => _.toLowerCase() === "true"),
+    O.map((_) => _.toLowerCase() === "true"),
     O.toUndefined
   ),
 
@@ -121,7 +121,7 @@ const errorOrConfig: t.Validation<IConfig> = IConfig.decode({
     IntegerFromString.decode,
     E.getOrElse(() => 3600 * 8)
   ),
-  isProduction: process.env.NODE_ENV === "production"
+  isProduction: process.env.NODE_ENV === "production",
 });
 
 /**
@@ -146,7 +146,7 @@ export function getConfig(): t.Validation<IConfig> {
 export function getConfigOrThrow(): IConfig {
   return pipe(
     errorOrConfig,
-    E.getOrElse(errors => {
+    E.getOrElse((errors) => {
       throw new Error(`Invalid configuration: ${readableReport(errors)}`);
     })
   );

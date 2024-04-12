@@ -14,7 +14,7 @@ export const singleStringReplyAsync = (
 ): TE.TaskEither<Error, boolean> =>
   pipe(
     command,
-    TE.map(reply => reply === "OK")
+    TE.map((reply) => reply === "OK")
   );
 
 /**
@@ -32,18 +32,18 @@ export const singleValueReplyAsync = (
  *
  * @see https://redis.io/topics/protocol#integer-reply
  */
-export const integerReplAsync = (expectedReply?: number) => (
-  command: TE.TaskEither<Error, unknown>
-): TE.TaskEither<Error, boolean> =>
-  pipe(
-    command,
-    TE.map(reply => {
-      if (expectedReply !== undefined && expectedReply !== reply) {
-        return false;
-      }
-      return typeof reply === "number";
-    })
-  );
+export const integerReplAsync =
+  (expectedReply?: number) =>
+  (command: TE.TaskEither<Error, unknown>): TE.TaskEither<Error, boolean> =>
+    pipe(
+      command,
+      TE.map((reply) => {
+        if (expectedReply !== undefined && expectedReply !== reply) {
+          return false;
+        }
+        return typeof reply === "number";
+      })
+    );
 
 /**
  * Transform any Redis falsy response to an error
@@ -52,13 +52,13 @@ export const integerReplAsync = (expectedReply?: number) => (
  * @param error
  * @returns
  */
-export const falsyResponseToErrorAsync = (error: Error) => (
-  response: TE.TaskEither<Error, boolean>
-): TE.TaskEither<Error, true> =>
-  pipe(
-    response,
-    TE.chain(res => (res ? TE.right(res) : TE.left(error)))
-  );
+export const falsyResponseToErrorAsync =
+  (error: Error) =>
+  (response: TE.TaskEither<Error, boolean>): TE.TaskEither<Error, true> =>
+    pipe(
+      response,
+      TE.chain((res) => (res ? TE.right(res) : TE.left(error)))
+    );
 
 export const setWithExpirationTask = (
   redisClientFactory: RedisClientFactory,
@@ -69,7 +69,7 @@ export const setWithExpirationTask = (
 ): TE.TaskEither<Error, true> =>
   pipe(
     TE.tryCatch(() => redisClientFactory.getInstance(), E.toError),
-    TE.chain(redisClient =>
+    TE.chain((redisClient) =>
       TE.tryCatch(
         () => redisClient.SETEX(key, expirationInSeconds, value),
         E.toError
@@ -87,7 +87,9 @@ export const getTask = (
 ): TE.TaskEither<Error, O.Option<string>> =>
   pipe(
     TE.tryCatch(() => redisClientFactory.getInstance(), E.toError),
-    TE.chain(redisClient => TE.tryCatch(() => redisClient.GET(key), E.toError)),
+    TE.chain((redisClient) =>
+      TE.tryCatch(() => redisClient.GET(key), E.toError)
+    ),
     singleValueReplyAsync
   );
 
@@ -97,7 +99,7 @@ export const existsKeyTask = (
 ): TE.TaskEither<Error, boolean> =>
   pipe(
     TE.tryCatch(() => redisClientFactory.getInstance(), E.toError),
-    TE.chain(redisClient =>
+    TE.chain((redisClient) =>
       TE.tryCatch(() => redisClient.EXISTS(key), E.toError)
     ),
     integerReplAsync(1)

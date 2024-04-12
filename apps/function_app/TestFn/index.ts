@@ -11,7 +11,7 @@ import { withAppInsightsContext } from "@pagopa/io-functions-commons/dist/src/ut
 import { AzureContextTransport } from "@pagopa/io-functions-commons/dist/src/utils/logging";
 import {
   MessageModel,
-  MESSAGE_COLLECTION_NAME
+  MESSAGE_COLLECTION_NAME,
 } from "@pagopa/io-functions-commons/dist/src/models/message";
 import { ServiceModel } from "@pagopa/io-functions-commons/dist/src/models/service";
 import { initTelemetryClient } from "../utils/appinsights";
@@ -27,7 +27,7 @@ const config = getConfigOrThrow();
 // eslint-disable-next-line functional/no-let
 let logger: Context["log"] | undefined;
 const contextTransport = new AzureContextTransport(() => logger, {
-  level: "debug"
+  level: "debug",
 });
 winston.add(contextTransport);
 

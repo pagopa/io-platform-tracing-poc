@@ -23,7 +23,7 @@ export class RedisClientFactory {
       this.redisClient = await pipe(
         this.config.isProduction,
         O.fromPredicate(identity),
-        O.chainNullableK(_ => this.config.REDIS_CLUSTER_ENABLED),
+        O.chainNullableK((_) => this.config.REDIS_CLUSTER_ENABLED),
         O.chain(O.fromPredicate(identity)),
         O.map(() =>
           this.createClusterRedisClient(
@@ -60,9 +60,9 @@ export class RedisClientFactory {
       password,
       socket: {
         port: redisPort,
-        tls: useTls
+        tls: useTls,
       },
-      url: `redis://${redisUrl}`
+      url: `redis://${redisUrl}`,
     });
     await redisClientConnection.connect();
     return redisClientConnection;
@@ -81,14 +81,14 @@ export class RedisClientFactory {
     >({
       defaults: {
         legacyMode: true,
-        password
+        password,
       },
       rootNodes: [
         {
-          url: `redis://${redisUrl}:${redisPort}`
-        }
+          url: `redis://${redisUrl}:${redisPort}`,
+        },
       ],
-      useReplicas: true
+      useReplicas: true,
     });
     await redisClientConnection.connect();
     return redisClientConnection;
