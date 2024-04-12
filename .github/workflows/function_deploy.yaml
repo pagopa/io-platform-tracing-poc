@@ -52,7 +52,7 @@ jobs:
     name: Deploy
     if: ${{ !github.event.act }}
     needs: [build]
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
     permissions:
