@@ -23,22 +23,14 @@ jobs:
         with:
           node-version-file: ".node-version"
           cache: "yarn"
-  
-      - name: Install dependencies
-        run: yarn install --immutable
-        shell: bash
-      
-      - name: Build ${{ inputs.workspace-name }}
-        run: yarn build
-        shell: bash
 
       - name: Make the azure function app artifact
         id: make-function-app-artifact
         run: |
           cd apps/function_app
-          npm pkg set --json "bundledDependencies"=true
-          npm pkg set --json "files"='["**/function.json", "dist", "host.json","extensions.csproj"]'
-          npx npm-pack-zip
+          yarn install --immutable
+          yarn build
+          zip -r ${{ inputs.workspace-name }}.zip .
           echo "artifact-path=$(realpath ${{ inputs.workspace-name }}.zip)" >> "$GITHUB_OUTPUT"
         shell: bash
 
@@ -75,6 +67,6 @@ jobs:
       - name: Deploy to prod slot
         uses: azure/webapps-deploy@v2
         with:
-          resource-group-name: dev-andreag
-          app-name: testai-functionapp
+          resource-group-name: io-d-tracing-poc-rg
+          app-name: io-d-tracing-poc-fn
           package: ${{ inputs.workspace-name }}.zip
