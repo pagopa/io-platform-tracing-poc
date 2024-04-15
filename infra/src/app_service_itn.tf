@@ -7,8 +7,8 @@ locals {
 
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.ai.instrumentation_key
 
-    FN_CLIENT_BASE_URL = "https://${module.function_app.default_hostname}"
-    FN_CLIENT_KEY = module.function_app.master_key
+    FN_CLIENT_BASE_URL = "https://${module.function_app_itn.default_hostname}"
+    FN_CLIENT_KEY = module.function_app_itn.master_key
 
     // Fetch keepalive
     FETCH_KEEPALIVE_ENABLED             = "true"
@@ -21,14 +21,14 @@ locals {
   })
 }
 
-module "app_service" {
+module "app_service_itn" {
   source = "github.com/pagopa/terraform-azurerm-v3.git//app_service?ref=v7.77.0"
 
-  name                = format("%s-tracing-poc-app", local.project)
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  name                = format("%s-tracing-poc-app", local.project_itn)
+  location            = azurerm_resource_group.rg_itn.location
+  resource_group_name = azurerm_resource_group.rg_itn.name
 
-  plan_name = format("%s-tracing-poc-app-plan", local.project)
+  plan_name = format("%s-tracing-poc-app-plan", local.project_itn)
   sku_name  = var.app_service.sku_name
 
   node_version = local.app_service_node_version
@@ -47,10 +47,10 @@ module "app_service" {
   always_on        = true
   vnet_integration = true
 
-  subnet_id = module.app_service_snet.id
+  subnet_id = module.app_service_snet_itn.id
 
   allowed_subnets = [
-    module.app_service_snet.id
+    module.app_service_snet_itn.id
   ]
 
   tags = var.tags

@@ -30,12 +30,12 @@ locals {
   }
 }
 
-module "function_app" {
+module "function_app_itn" {
   source = "github.com/pagopa/terraform-azurerm-v3.git//function_app?ref=v7.77.0"
 
-  resource_group_name = azurerm_resource_group.rg.name
-  name                = "${local.project}-tracing-poc-fn"
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg_itn.name
+  name                = "${local.project_itn}-tracing-poc-fn"
+  location            = azurerm_resource_group.rg_itn.location
   health_check_path   = "/ready"
 
   export_keys = true
@@ -61,11 +61,11 @@ module "function_app" {
 
   sticky_app_setting_names = []
 
-  subnet_id = module.fn_app_snet.id
+  subnet_id = module.fn_app_snet_itn.id
 
   allowed_subnets = [
-    module.fn_app_snet.id,
-    module.app_service_snet.id,
+    module.fn_app_snet_itn.id,
+    module.app_service_snet_itn.id,
   ]
 
   application_insights_instrumentation_key = azurerm_application_insights.ai.instrumentation_key
