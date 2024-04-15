@@ -4,7 +4,14 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  deploy_workspace_to_azure:
+  deploy_app_to_azure:
+    name: Deploy
+    uses: ./.github/workflows/app_deploy.yaml
+    with:
+      environment: dev
+      workspace-name: app_service
+    secrets: inherit
+  deploy_function_to_azure:
     name: Deploy
     uses: ./.github/workflows/function_deploy.yaml
     with:

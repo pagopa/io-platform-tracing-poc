@@ -1,4 +1,4 @@
-name: Deploy function app
+name: Deploy app service
 
 on:
   workflow_call:
@@ -25,9 +25,9 @@ jobs:
           cache: "yarn"
 
       - name: Make the azure function app artifact
-        id: make-function-app-artifact
+        id: make-app-service-artifact
         run: |
-          cd apps/function_app
+          cd apps/app_service
           yarn install --immutable
           yarn build
           zip -r ${{ inputs.workspace-name }}.zip .
@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.workspace-name }}
-          path: ${{ steps.make-function-app-artifact.outputs.artifact-path }}
+          path: ${{ steps.make-app-service-artifact.outputs.artifact-path }}
 
   deploy:
     name: Deploy
@@ -68,5 +68,5 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           resource-group-name: io-d-tracing-poc-rg
-          app-name: io-d-tracing-poc-fn
+          app-name: io-d-tracing-poc-app
           package: ${{ inputs.workspace-name }}.zip
