@@ -70,4 +70,3 @@ jobs:
           resource-group-name: io-d-itn-tracing-poc-rg
           app-name: io-d-itn-tracing-poc-app
           package: ${{ inputs.workspace-name }}.zip
-          slot-name: io-d-itn-tracing-poc-app
