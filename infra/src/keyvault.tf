@@ -8,11 +8,59 @@ resource "azurerm_key_vault" "keyvault" {
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_user_assigned_identity.appgateway_itn.id
+    object_id = azurerm_user_assigned_identity.appgateway_itn.client_id
 
     certificate_permissions = [
       "Get",
       "List",
+    ]
+
+    secret_permissions = [
+      "Get",
+      "List",
+    ]
+  }
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = "b7e474ea-dbe5-44a2-922d-9d1c212cada6"
+
+    certificate_permissions = [
+      "Get",
+      "List",
+      "Create"
+    ]
+
+    secret_permissions = [
+      "Get",
+      "List",
+    ]
+  }
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = "58e3c6d6-c60a-4147-ac68-5636f50012c3"
+
+    certificate_permissions = [
+      "Get",
+      "List",
+      "Create"
+    ]
+
+    secret_permissions = [
+      "Get",
+      "List",
+    ]
+  }
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = "034f7d52-70c1-43f9-a4d2-e1d57057133c"
+
+    certificate_permissions = [
+      "Get",
+      "List",
+      "Create"
     ]
 
     secret_permissions = [

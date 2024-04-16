@@ -6,6 +6,7 @@ tags = {
   Owner       = "IO"
   Source      = "https://github.com/pagopa/io-platform-tracing-poc"
   CostCenter  = "TS310 - PAGAMENTI & SERVIZI"
+  Test        = "cross-region"
 }
 
 ## Network

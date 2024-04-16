@@ -49,6 +49,16 @@ module "function_app_itn" {
     maximum_elastic_worker_count = 0
   }
 
+  storage_account_info = {
+    account_kind                      = "StorageV2"
+    account_tier                      = "Standard"
+    account_replication_type          = "ZRS"
+    access_tier                       = "Hot"
+    advanced_threat_protection_enable = false
+    use_legacy_defender_version       = false
+    public_network_access_enabled     = false
+  }
+
   node_version    = 18
   runtime_version = "~4"
 

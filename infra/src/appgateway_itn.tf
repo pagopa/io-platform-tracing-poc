@@ -14,7 +14,7 @@ resource "azurerm_public_ip" "appgateway_public_ip_itn" {
 module "appgateway_snet_itn" {
   source                                    = "git::https://github.com/pagopa/terraform-azurerm-v3.git//subnet?ref=v7.61.0"
   name                                      = format("%s-appgateway-snet", local.project_itn)
-  address_prefixes                          = ["10.10.1.0/24"]
+  address_prefixes                          = ["10.10.0.0/24"]
   resource_group_name                       = azurerm_resource_group.rg_itn.name
   virtual_network_name                      = azurerm_virtual_network.vnet_itn.name
   private_endpoint_network_policies_enabled = true
@@ -63,7 +63,7 @@ module "app_gw_itn" {
   # Configure backends
   backends = {
     appbackend-app = {
-      protocol     = "Http"
+      protocol     = "Https"
       host         = null
       port         = 443
       ip_addresses = null # with null value use fqdns
@@ -80,14 +80,19 @@ module "app_gw_itn" {
   # Configure listeners
   listeners = {
     api-app-io-pagopa-it = {
-      protocol           = "Http"
-      host               = null
-      port               = 80
+      protocol           = "Https"
+      host               = "internal.tracing-poc.com"
+      port               = 443
       ssl_profile_name   = null
       firewall_policy_id = null
       certificate = {
         name = azurerm_key_vault_certificate.keyvault_certificate.name
-        id = azurerm_key_vault_certificate.keyvault_certificate.versionless_id
+        id = replace(
+          azurerm_key_vault_certificate.keyvault_certificate.secret_id,
+          "/${azurerm_key_vault_certificate.keyvault_certificate.version}",
+          ""
+        )
+        # id = azurerm_key_vault_certificate.keyvault_certificate.versionless_id
       }
     }
   }
@@ -123,5 +128,9 @@ module "app_gw_itn" {
         response_header_configurations = []
       }]
     },
+  ]
+
+  depends_on = [ 
+    azurerm_key_vault_certificate.keyvault_certificate
   ]
 }
