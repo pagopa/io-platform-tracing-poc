@@ -38,6 +38,7 @@ module "app_gw_weu" {
   app_gateway_max_capacity = 2
    
   tags = var.tags
+  waf_enabled = false
 
   identity_ids = [azurerm_user_assigned_identity.appgateway_itn.id]
 

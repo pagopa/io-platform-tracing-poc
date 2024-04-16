@@ -50,7 +50,8 @@ module "app_service_itn" {
   subnet_id = module.app_service_snet_itn.id
 
   allowed_subnets = [
-    module.app_service_snet_itn.id
+    module.app_service_snet_itn.id,
+    module.appgateway_snet_itn.id
   ]
 
   tags = var.tags

@@ -31,7 +31,7 @@ locals {
 }
 
 module "function_app_itn" {
-  source = "github.com/pagopa/terraform-azurerm-v3.git//function_app?ref=v7.77.0"
+  source = "github.com/pagopa/terraform-azurerm-v3.git//function_app?ref=threat-protection-st"
 
   resource_group_name = azurerm_resource_group.rg_itn.name
   name                = "${local.project_itn}-tracing-poc-fn"

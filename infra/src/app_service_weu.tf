@@ -27,7 +27,8 @@ module "app_service_weu" {
   subnet_id = module.app_service_snet_weu.id
 
   allowed_subnets = [
-    module.app_service_snet_weu.id
+    module.app_service_snet_weu.id,
+    module.appgateway_snet_weu.id
   ]
 
   tags = var.tags

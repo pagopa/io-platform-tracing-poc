@@ -1,5 +1,5 @@
 resource "azurerm_key_vault" "keyvault" {
-  name                       = format("%s-key-vault", local.project_weu)
+  name                       = format("%s-key-vault", local.project_itn)
   location                   = azurerm_resource_group.rg_itn.location
   resource_group_name        = azurerm_resource_group.rg_itn.name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -8,11 +8,12 @@ resource "azurerm_key_vault" "keyvault" {
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = azurerm_user_assigned_identity.appgateway_itn.client_id
+    object_id = azurerm_user_assigned_identity.appgateway_itn.principal_id
 
     certificate_permissions = [
       "Get",
       "List",
+      "Delete",
     ]
 
     secret_permissions = [
@@ -44,7 +45,8 @@ resource "azurerm_key_vault" "keyvault" {
     certificate_permissions = [
       "Get",
       "List",
-      "Create"
+      "Create",
+      "Delete"
     ]
 
     secret_permissions = [
@@ -60,7 +62,8 @@ resource "azurerm_key_vault" "keyvault" {
     certificate_permissions = [
       "Get",
       "List",
-      "Create"
+      "Create",
+      "Delete"
     ]
 
     secret_permissions = [
@@ -68,6 +71,8 @@ resource "azurerm_key_vault" "keyvault" {
       "List",
     ]
   }
+
+  tags = var.tags
 }
 
 resource "azurerm_key_vault_certificate" "keyvault_certificate" {
