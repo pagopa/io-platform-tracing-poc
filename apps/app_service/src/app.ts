@@ -17,7 +17,6 @@ export const createApp = async () => {
   const app = express();
 
   initTelemetryClient();
-  const port = 3000;
   // Parse the incoming request body. This is needed by Passport spid strategy.
   app.use(
     bodyParser.json({
@@ -56,9 +55,9 @@ export const createApp = async () => {
     )()
   );
 
-  app.listen(port, () => {
+  app.listen(config.SERVER_PORT, () => {
     // eslint-disable-next-line no-console
-    console.log(`Example app listening on port ${port}`);
+    console.log(`Example app service listening on port ${config.SERVER_PORT}`);
   });
 };
 
