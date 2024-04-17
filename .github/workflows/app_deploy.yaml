@@ -23,6 +23,7 @@ jobs:
         with:
           node-version-file: ".node-version"
           cache: "yarn"
+          cache-dependency-path: apps/app_service/yarn.lock
 
       - name: Make the App Service artifact
         id: make-app-service-artifact

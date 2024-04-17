@@ -23,6 +23,7 @@ jobs:
         with:
           node-version-file: ".node-version"
           cache: "yarn"
+          cache-dependency-path: apps/function_app/yarn.lock
 
       - name: Make the azure function app artifact
         id: make-function-app-artifact
