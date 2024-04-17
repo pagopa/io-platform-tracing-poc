@@ -67,6 +67,6 @@ jobs:
       - name: Deploy to prod slot
         uses: azure/webapps-deploy@v2
         with:
-          resource-group-name: io-d-itn-tracing-poc-rg
-          app-name: io-d-itn-tracing-poc-app
+          resource-group-name: io-d-tracing-poc-rg
+          app-name: io-d-tracing-poc-app
           package: ${{ inputs.workspace-name }}.zip

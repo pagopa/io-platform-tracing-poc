@@ -2,13 +2,13 @@
   "name": "app_service",
   "version": "1.0.0",
   "description": "Test App Service",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "prebuild": "npm-run-all generate",
     "build": "tsc --outDir dist",
     "generate": "npm-run-all generate:*",
     "generate:api-test": "rimraf ./generated/definitions && shx mkdir -p ./generated/definitions && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/io-platform-tracing-poc/main/apps/function_app/openapi/index.yaml --no-strict --out-dir ./generated/definitions --request-types --response-decoders --client",
-    "start": "node -r dotenv/config dist/app.js",
+    "start": "node -r dotenv/config dist/src/app.js",
     "start-ts": "ts-node -r dotenv/config src/app.ts",
     "test": "jest",
     "lint": "eslint . -c .eslintrc.js --ext .ts,.tsx"
@@ -19,7 +19,7 @@
   "dependencies": {
     "@pagopa/ts-commons": "^13.0.0",
     "body-parser": "^1.20.2",
-    "node-fetch": "^3.3.2",
+    "node-fetch": "^2.6.7",
     "dotenv": "^8.2.0",
     "express": "^4.18.2",
     "fp-ts": "^2.16.1",
