@@ -15,9 +15,8 @@ export class RedisClientFactory {
     this.config = config;
   }
 
-  public readonly getInstance = async (): Promise<RedisClient> => {
-    return this.redisClient;
-  };
+  public readonly getInstance = async (): Promise<RedisClient> =>
+    this.redisClient;
 
   protected readonly createSimpleRedisClient = async (
     redisUrl: string,
@@ -34,9 +33,9 @@ export class RedisClientFactory {
       password,
       socket: {
         port: redisPort,
-        tls: useTls,
+        tls: useTls
       },
-      url: `redis://${redisUrl}`,
+      url: `redis://${redisUrl}`
     });
     await redisClientConnection.connect();
     return redisClientConnection;
@@ -55,14 +54,14 @@ export class RedisClientFactory {
     >({
       defaults: {
         legacyMode: true,
-        password,
+        password
       },
       rootNodes: [
         {
-          url: `redis://${redisUrl}:${redisPort}`,
-        },
+          url: `redis://${redisUrl}:${redisPort}`
+        }
       ],
-      useReplicas: true,
+      useReplicas: true
     });
     await redisClientConnection.connect();
     return redisClientConnection;

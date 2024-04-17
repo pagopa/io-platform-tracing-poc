@@ -16,22 +16,48 @@ schemes:
 security:
   - ApiKeyAuth: []
 paths:
-  /ping:
-    get:
-      operationId: pingOperation
-      summary: Ping
-      description: Returns function's package name and version
-      tags:
-        - restricted
+  /resource:
+    post:
+      operationId: postResource
+      summary: Create Resource
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/CreateResource'
+          required: true
       responses:
-        '200':
+        '204':
           description: Success.
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ProblemJson'
+        '401':
+          description: Token null or invalid.
+        '403':
+          description: Request not authorized.
+        '404':
+          description: Resource not found.
         '500':
-          description: Internal Server error
-  /test:
+          description: There was an error in forwarding the notification.
+          schema:
+            $ref: '#/definitions/ProblemJson'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+  /resources/{fiscal_code}/{resource_id}:
     get:
-      operationId: test
-      summary: Test
+      operationId: getResource
+      summary: Get Resource by its Id
+      parameters:
+        - $ref: '#/parameters/FiscalCode'
+        - name: resourceid
+          in: path
+          type: string
+          required: true
+          description: The ID of the resource.
       responses:
         '204':
           description: Success.
@@ -54,6 +80,18 @@ paths:
       produces:
         - application/json
 definitions:
+  CreateResource:
+    type: object
+    properties:
+      fiscal_code:
+        type: string
+        minLenght: 1
+      resource_id:
+        type: string
+        minLenght: 1
+    required:
+      - fiscal_code
+      - resource_id
   ProblemJson:
     type: object
     properties:
@@ -94,6 +132,7 @@ definitions:
           An absolute URI that identifies the specific occurrence of the problem.
 
           It may or may not yield further information if dereferenced.
+parameters:
   FiscalCode:
     type: string
     description: User's fiscal code.

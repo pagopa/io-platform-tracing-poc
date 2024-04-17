@@ -74,6 +74,7 @@
     "nodemailer-sendgrid": "^1.0.3",
     "redis": "^4.6.13",
     "ts-pattern": "^4.0.5",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "ulid": "^2.3.0"
   }
 }

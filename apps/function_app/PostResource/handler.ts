@@ -16,17 +16,20 @@ import {
 } from "@pagopa/ts-commons/lib/responses";
 import { ContextMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/context_middleware";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
-import { createLogger, ILogger } from "../utils/logger";
 
-import { initTelemetryClient } from "../utils/appinsights";
-import { MessageWithContentReader, ServiceReader } from "./readers";
+import { RequiredParamMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/required_param";
+import { FiscalCodeMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/fiscalcode";
+import { Context } from "@azure/functions";
+import { MessageWithContentReader, ServiceReader } from "./writers";
 
 // -------------------------------------
 // TestHandler
 // -------------------------------------
 
-type TestHandler = (
-  logger: ILogger
+type PostHandler = (
+  context: Context,
+  fiscalCode: FiscalCode,
+  resourceId: NonEmptyString
 ) => Promise<
   | IResponseSuccessNoContent
   | IResponseErrorInternal
@@ -34,31 +37,34 @@ type TestHandler = (
   | IResponseErrorForbiddenNotAuthorized
 >;
 
-const aFiscalCode = "AAAA" as FiscalCode;
-const aMessageId = "AAA" as NonEmptyString;
-
-export const TestHandler = (
+export const PostResourceHandler = (
   retrieveMessageWithContent: MessageWithContentReader,
   retrieveService: ServiceReader
-): TestHandler => async (_logger): ReturnType<TestHandler> =>
+): PostHandler => async (
+  _logger,
+  fiscalCode,
+  resourceId
+): ReturnType<PostHandler> =>
   pipe(
-    retrieveMessageWithContent(aFiscalCode, aMessageId),
-    TE.chain(msg => retrieveService(msg.senderServiceId)),
+    retrieveMessageWithContent(fiscalCode, resourceId),
+    TE.chain(res => retrieveService(res.senderServiceId)),
     TE.map(_ => ResponseSuccessNoContent()),
     TE.toUnion
   )();
 
-export const Test = (
+export const PostResource = (
   retrieveMessageWithContent: MessageWithContentReader,
-  retrieveService: ServiceReader,
-  telemetryClient: ReturnType<typeof initTelemetryClient>
+  retrieveService: ServiceReader
   // eslint-disable-next-line max-params
 ): express.RequestHandler => {
-  const handler = TestHandler(retrieveMessageWithContent, retrieveService);
-  const middlewaresWrap = withRequestMiddlewares(ContextMiddleware());
-  return wrapRequestHandler(
-    middlewaresWrap(context =>
-      handler(createLogger(context, telemetryClient, "Test"))
-    )
+  const handler = GetResourceHandler(
+    retrieveMessageWithContent,
+    retrieveService
   );
+  const middlewaresWrap = withRequestMiddlewares(
+    ContextMiddleware(),
+    FiscalCodeMiddleware,
+    RequiredParamMiddleware("resourceid", NonEmptyString)
+  );
+  return wrapRequestHandler(middlewaresWrap(handler));
 };

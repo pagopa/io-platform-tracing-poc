@@ -16,63 +16,45 @@ import { withDefault } from "@pagopa/ts-commons/lib/types";
 import { BooleanFromString } from "@pagopa/ts-commons/lib/booleans";
 import { CommaSeparatedListOf } from "./types";
 
-// exclude a specific value from a type
-// as strict equality is performed, allowed input types are constrained to be values not references (object, arrays, etc)
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const AnyBut = <A extends string | number | boolean | symbol, Out = A>(
-  but: A,
-  base: t.Type<A, Out> = t.any
-) =>
-  t.brand(
-    base,
-    (
-      s
-    ): s is t.Branded<
-      t.TypeOf<typeof base>,
-      { readonly AnyBut: unique symbol }
-    > => s !== but,
-    "AnyBut"
-  );
-
 export const FeatureFlagType = t.union([
   t.literal("none"),
   t.literal("beta"),
   t.literal("canary"),
-  t.literal("prod"),
+  t.literal("prod")
 ]);
 export type FeatureFlagType = t.TypeOf<typeof FeatureFlagType>;
 
 // global app configuration
 export type IConfig = t.TypeOf<typeof IConfig>;
 export const IConfig = t.type({
-    /* eslint-disable sort-keys */
-    APPINSIGHTS_INSTRUMENTATIONKEY: NonEmptyString,
+  /* eslint-disable sort-keys */
+  APPINSIGHTS_INSTRUMENTATIONKEY: NonEmptyString,
 
-    COSMOSDB_KEY: NonEmptyString,
-    COSMOSDB_NAME: NonEmptyString,
-    COSMOSDB_URI: NonEmptyString,
+  COSMOSDB_KEY: NonEmptyString,
+  COSMOSDB_NAME: NonEmptyString,
+  COSMOSDB_URI: NonEmptyString,
 
-    MESSAGE_CONTAINER_NAME: NonEmptyString,
+  MESSAGE_CONTAINER_NAME: NonEmptyString,
 
-    QueueStorageConnection: NonEmptyString,
+  QueueStorageConnection: NonEmptyString,
 
-    FF_TYPE: withDefault(t.string, "none").pipe(FeatureFlagType),
-    USE_FALLBACK: withDefault(t.string, "false").pipe(BooleanFromString),
-    FF_BETA_TESTERS: withDefault(t.string, "").pipe(
-      CommaSeparatedListOf(NonEmptyString)
-    ),
-    FF_CANARY_USERS_REGEX: withDefault(t.string, "XYZ").pipe(NonEmptyString),
+  FF_TYPE: withDefault(t.string, "none").pipe(FeatureFlagType),
+  USE_FALLBACK: withDefault(t.string, "false").pipe(BooleanFromString),
+  FF_BETA_TESTERS: withDefault(t.string, "").pipe(
+    CommaSeparatedListOf(NonEmptyString)
+  ),
+  FF_CANARY_USERS_REGEX: withDefault(t.string, "XYZ").pipe(NonEmptyString),
 
-    STORAGE_CONNECTION_STRING: NonEmptyString,
+  STORAGE_CONNECTION_STRING: NonEmptyString,
 
-    isProduction: t.boolean,
-    /* eslint-enable sort-keys */
-  });
+  isProduction: t.boolean
+  /* eslint-enable sort-keys */
+});
 
 // No need to re-evaluate this object for each call
 const errorOrConfig: t.Validation<IConfig> = IConfig.decode({
   ...process.env,
-  isProduction: process.env.NODE_ENV === "production",
+  isProduction: process.env.NODE_ENV === "production"
 });
 
 /**
@@ -97,7 +79,7 @@ export function getConfig(): t.Validation<IConfig> {
 export function getConfigOrThrow(): IConfig {
   return pipe(
     errorOrConfig,
-    E.getOrElse((errors) => {
+    E.getOrElse(errors => {
       throw new Error(`Invalid configuration: ${readableReport(errors)}`);
     })
   );

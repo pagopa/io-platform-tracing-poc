@@ -4,7 +4,6 @@ import { pipe } from "fp-ts/lib/function";
 import * as TE from "fp-ts/TaskEither";
 import * as AP from "fp-ts/lib/Apply";
 
-
 import {
   RetrievedService,
   ServiceModel
@@ -16,7 +15,6 @@ import {
   RetrievedMessageWithContent
 } from "@pagopa/io-functions-commons/dist/src/models/message";
 
-
 import {
   IResponseErrorInternal,
   IResponseErrorNotFound,
@@ -26,7 +24,6 @@ import {
 import { ServiceId } from "@pagopa/io-functions-commons/dist/generated/definitions/ServiceId";
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import { MessageContent } from "@pagopa/io-functions-commons/dist/generated/definitions/MessageContent";
-
 
 export type ServiceReader = (
   serviceId: ServiceId
