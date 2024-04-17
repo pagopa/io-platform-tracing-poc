@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import * as TE from "fp-ts/lib/TaskEither";
 import * as E from "fp-ts/lib/Either";
-import * as express from "express";
+import express from "express";
 import * as bodyParser from "body-parser";
 import { flow, pipe } from "fp-ts/lib/function";
 import { errorsToReadableMessages } from "@pagopa/ts-commons/lib/reporters";
@@ -17,7 +17,6 @@ export const createApp = async () => {
   const app = express();
 
   initTelemetryClient();
-  const port = 3000;
   // Parse the incoming request body. This is needed by Passport spid strategy.
   app.use(
     bodyParser.json({
@@ -31,11 +30,11 @@ export const createApp = async () => {
   // Parse an urlencoded body.
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  app.get("/info", (_: express.Request, res) =>
+  app.get("/info", (_: express.Request, res: express.Response) =>
     res.status(200).json({ status: "OK" })
   );
 
-  app.get("/test", (_: express.Request, res) =>
+  app.get("/test", (_: express.Request, res: express.Response) =>
     pipe(
       TE.tryCatch(() => apiClient.test({}), E.toError),
       TE.chain(
@@ -56,9 +55,9 @@ export const createApp = async () => {
     )()
   );
 
-  app.listen(port, () => {
+  app.listen(config.SERVER_PORT, () => {
     // eslint-disable-next-line no-console
-    console.log(`Example app listening on port ${port}`);
+    console.log(`Example app service listening on port ${config.SERVER_PORT}`);
   });
 };
 

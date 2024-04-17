@@ -1,6 +1,4 @@
 /* eslint-disable no-invalid-this */
-import { identity, pipe } from "fp-ts/lib/function";
-import * as O from "fp-ts/lib/Option";
 import * as redis from "redis";
 import { IConfig } from "./config";
 
@@ -18,30 +16,6 @@ export class RedisClientFactory {
   }
 
   public readonly getInstance = async (): Promise<RedisClient> => {
-    if (!this.redisClient) {
-      // eslint-disable-next-line functional/immutable-data
-      this.redisClient = await pipe(
-        this.config.isProduction,
-        O.fromPredicate(identity),
-        O.chainNullableK((_) => this.config.REDIS_CLUSTER_ENABLED),
-        O.chain(O.fromPredicate(identity)),
-        O.map(() =>
-          this.createClusterRedisClient(
-            this.config.REDIS_URL,
-            this.config.REDIS_PASSWORD,
-            this.config.REDIS_PORT
-          )
-        ),
-        O.getOrElse(() =>
-          this.createSimpleRedisClient(
-            this.config.REDIS_URL,
-            this.config.REDIS_PASSWORD,
-            this.config.REDIS_PORT,
-            this.config.REDIS_TLS_ENABLED
-          )
-        )
-      );
-    }
     return this.redisClient;
   };
 

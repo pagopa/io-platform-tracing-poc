@@ -1,4 +1,4 @@
-name: Deploy function app
+name: Deploy app service
 
 on:
   workflow_call:
@@ -29,15 +29,16 @@ jobs:
         with:
           node-version-file: ".node-version"
           cache: "yarn"
-          cache-dependency-path: apps/function_app/yarn.lock
+          cache-dependency-path: apps/app_service/yarn.lock
 
-      - name: Make the azure function app artifact
-        id: make-function-app-artifact
+      - name: Make the App Service artifact
+        id: make-app-service-artifact
         run: |
-          cd apps/function_app
-          yarn install --immutable
+          cd apps/app_service
+          yarn install
           yarn build
-          zip -r ${{ inputs.workspace-name }}.zip .
+          cat package.json
+          zip -r ${{ inputs.workspace-name }}.zip ./*
           echo "artifact-path=$(realpath ${{ inputs.workspace-name }}.zip)" >> "$GITHUB_OUTPUT"
         shell: bash
 
@@ -45,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ inputs.workspace-name }}
-          path: ${{ steps.make-function-app-artifact.outputs.artifact-path }}
+          path: ${{ steps.make-app-service-artifact.outputs.artifact-path }}
 
   deploy:
     name: Deploy
