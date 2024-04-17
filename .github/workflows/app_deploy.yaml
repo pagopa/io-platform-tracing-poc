@@ -24,11 +24,11 @@ jobs:
           node-version-file: ".node-version"
           cache: "yarn"
 
-      - name: Make the azure function app artifact
+      - name: Make the App Service artifact
         id: make-app-service-artifact
         run: |
           cd apps/app_service
-          yarn install --immutable
+          yarn install
           yarn build
           cat package.json
           zip -r ${{ inputs.workspace-name }}.zip ./*
