@@ -30,6 +30,7 @@ jobs:
           cd apps/app_service
           yarn install --immutable
           yarn build
+          ls -l
           zip -r ${{ inputs.workspace-name }}.zip ./*
           echo "artifact-path=$(realpath ${{ inputs.workspace-name }}.zip)" >> "$GITHUB_OUTPUT"
         shell: bash
