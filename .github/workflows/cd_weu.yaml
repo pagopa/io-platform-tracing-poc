@@ -1,20 +1,24 @@
-name: Deploy
+name: Deploy West Europe
 
 on:
   workflow_dispatch: {}
 
 jobs:
-  deploy_app_to_azure:
+  deploy_app_to_weu_azure:
     name: Deploy App Service
     uses: ./.github/workflows/app_deploy.yaml
     with:
       environment: dev
       workspace-name: app_service
+      resource-group: io-d-weu-tracing-poc-rg
+      app-name: io-d-weu-tracing-poc-app
     secrets: inherit
-  deploy_function_to_azure:
+  deploy_function_to_weu_azure:
     name: Deploy Function App
     uses: ./.github/workflows/function_deploy.yaml
     with:
       environment: dev
       workspace-name: function_app
+      resource-group: io-d-weu-tracing-poc-rg
+      app-name: io-d-weu-tracing-poc-fn
     secrets: inherit

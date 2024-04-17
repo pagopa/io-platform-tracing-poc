@@ -36,7 +36,7 @@ module "function_app_itn" {
   resource_group_name = azurerm_resource_group.rg_itn.name
   name                = "${local.project_itn}-tracing-poc-fn"
   location            = azurerm_resource_group.rg_itn.location
-  health_check_path   = "/ready"
+  health_check_path   = "/api/ready"
 
   export_keys = true
 

@@ -8,7 +8,7 @@ module "function_app_weu" {
   resource_group_name = azurerm_resource_group.rg_weu.name
   name                = "${local.project_weu}-tracing-poc-fn"
   location            = azurerm_resource_group.rg_weu.location
-  health_check_path   = "/ready"
+  health_check_path   = "/api/ready"
 
   export_keys = true
 

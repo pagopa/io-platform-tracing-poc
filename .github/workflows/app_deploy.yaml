@@ -9,6 +9,12 @@ on:
       environment:
         required: true
         type: string
+      resource-group:
+        required: true
+        type: string
+      app-name:
+        required: true
+        type: string
 
 jobs:
   build:
@@ -69,6 +75,6 @@ jobs:
       - name: Deploy to prod slot
         uses: azure/webapps-deploy@v2
         with:
-          resource-group-name: io-d-itn-tracing-poc-rg
-          app-name: io-d-itn-tracing-poc-app
+          resource-group-name: ${{ inputs.resource-group }}
+          app-name: ${{ inputs.app-name }}
           package: ${{ inputs.workspace-name }}.zip
