@@ -1,4 +1,4 @@
-import * as express from "express";
+import express from "express";
 import * as winston from "winston";
 
 import { createBlobService } from "azure-storage";
@@ -29,7 +29,7 @@ let logger: Context["log"] | undefined;
 const contextTransport = new AzureContextTransport(() => logger, {
   level: "debug",
 });
-winston.add(contextTransport);
+winston.add(contextTransport as any);
 
 const blobService = createBlobService(config.STORAGE_CONNECTION_STRING);
 
