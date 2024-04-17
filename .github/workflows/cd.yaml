@@ -5,14 +5,14 @@ on:
 
 jobs:
   deploy_app_to_azure:
-    name: Deploy
+    name: Deploy App Service
     uses: ./.github/workflows/app_deploy.yaml
     with:
       environment: dev
       workspace-name: app_service
     secrets: inherit
   deploy_function_to_azure:
-    name: Deploy
+    name: Deploy Function App
     uses: ./.github/workflows/function_deploy.yaml
     with:
       environment: dev
