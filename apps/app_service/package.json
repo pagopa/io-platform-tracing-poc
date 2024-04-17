@@ -8,7 +8,7 @@
     "build": "tsc --outDir dist",
     "generate": "npm-run-all generate:*",
     "generate:api-test": "rimraf ./generated/definitions && shx mkdir -p ./generated/definitions && gen-api-models --api-spec https://raw.githubusercontent.com/pagopa/io-platform-tracing-poc/main/apps/function_app/openapi/index.yaml --no-strict --out-dir ./generated/definitions --request-types --response-decoders --client",
-    "start": "node -r dotenv/config dist/src/app.js",
+    "start": "node dist/src/app.js",
     "start-ts": "ts-node -r dotenv/config src/app.ts",
     "test": "jest",
     "lint": "eslint . -c .eslintrc.js --ext .ts,.tsx"
