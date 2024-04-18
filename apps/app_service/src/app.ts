@@ -10,6 +10,8 @@ import { initTelemetryClient } from "./utils/appinsights";
 import { FnClient } from "./utils/client";
 import { GetResourceParams } from "./utils/types";
 import { CreateResource } from "../generated/definitions/CreateResource";
+import { IResponseType } from "@pagopa/ts-commons/lib/requests";
+import { CreatedResource } from "../generated/definitions/CreatedResource";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createApp = async () => {
@@ -94,12 +96,13 @@ export const createApp = async () => {
       ),
       TE.chain(
         TE.fromPredicate(
-          (response) => response.status === 204,
+          (response): response is IResponseType<200, CreatedResource, never> =>
+            response.status === 200,
           (wrongRes) =>
             Error(`Error while calling api|ERROR=${JSON.stringify(wrongRes)}`)
         )
       ),
-      TE.map(() => res.status(200).json({ status: "OK" })),
+      TE.map((response) => res.status(200).json(response.value)),
       TE.mapLeft((err) => res.status(500).json({ error: String(err) }))
     )()
   );
