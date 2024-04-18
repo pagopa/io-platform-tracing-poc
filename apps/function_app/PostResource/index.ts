@@ -1,7 +1,5 @@
 import express from "express";
 import * as winston from "winston";
-
-import { createBlobService } from "azure-storage";
 import { AzureFunction, Context } from "@azure/functions";
 
 import createAzureFunctionHandler from "@pagopa/express-azure-functions/dist/src/createAzureFunctionsHandler";
@@ -13,12 +11,11 @@ import {
   MessageModel,
   MESSAGE_COLLECTION_NAME
 } from "@pagopa/io-functions-commons/dist/src/models/message";
-import { ServiceModel } from "@pagopa/io-functions-commons/dist/src/models/service";
 import { initTelemetryClient } from "../utils/appinsights";
 import { getConfigOrThrow } from "../utils/config";
 import { cosmosdbInstance } from "../utils/cosmosdb";
 
-import { GetResource } from "./handler";
+import { PostResource } from "./handler";
 import { writeResource as resourceWriter } from "./writers";
 
 // Get config
@@ -32,8 +29,6 @@ const contextTransport = new AzureContextTransport(() => logger, {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 winston.add(contextTransport as any);
 
-const blobService = createBlobService(config.STORAGE_CONNECTION_STRING);
-
 // Setup Express
 const app = express();
 secureExpressApp(app);
@@ -46,14 +41,11 @@ const messageModel = new MessageModel(
   config.MESSAGE_CONTAINER_NAME
 );
 
-const serviceModel = new ServiceModel(cosmosdbInstance.container("services"));
-
 // Add express route
-app.get(
-  "/api/v1/resources/:fiscalCode/:resourceid",
-  GetResource(
-    getMessageWithContent,
-    getService(serviceModel)
+app.post(
+  "/api/v1/resource",
+  PostResource(
+    resourceWriter(messageModel)
   )
 );
 

@@ -52,7 +52,7 @@ paths:
       operationId: getResource
       summary: Get Resource by its Id
       parameters:
-        - $ref: '#/parameters/FiscalCode'
+        - $ref: '#/parameters/FiscalCodeParam'
         - name: resourceid
           in: path
           type: string
@@ -80,12 +80,17 @@ paths:
       produces:
         - application/json
 definitions:
+  FiscalCode:
+    type: string
+    description: User's fiscal code.
+    format: FiscalCode
+    x-import: '@pagopa/ts-commons/lib/strings'
+    example: SPNDNL80R13C555X
   CreateResource:
     type: object
     properties:
       fiscal_code:
-        type: string
-        minLenght: 1
+        $ref: '#/definitions/FiscalCode'
       resource_id:
         type: string
         minLenght: 1
@@ -133,7 +138,10 @@ definitions:
 
           It may or may not yield further information if dereferenced.
 parameters:
-  FiscalCode:
+  FiscalCodeParam:
+    name: fiscal_code
+    in: path
+    x-example: SPNDNL80R13C555X
     type: string
     description: User's fiscal code.
     format: FiscalCode

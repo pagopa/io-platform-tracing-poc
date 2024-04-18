@@ -5,9 +5,9 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "route": "v1/resources/{fiscalCode}/{resourceid}",
+      "route": "v1/resource",
       "methods": [
-        "get"
+        "post"
       ]
     },
     {

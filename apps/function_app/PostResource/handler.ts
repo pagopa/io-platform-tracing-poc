@@ -8,19 +8,17 @@ import {
   wrapRequestHandler
 } from "@pagopa/io-functions-commons/dist/src/utils/request_middleware";
 import {
-  IResponseErrorForbiddenNotAuthorized,
   IResponseErrorInternal,
   IResponseErrorNotFound,
   IResponseSuccessNoContent,
   ResponseSuccessNoContent
 } from "@pagopa/ts-commons/lib/responses";
 import { ContextMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/context_middleware";
-import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 
-import { RequiredParamMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/required_param";
-import { FiscalCodeMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/fiscalcode";
+import { RequiredBodyPayloadMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/required_body_payload";
 import { Context } from "@azure/functions";
-import { MessageWithContentReader, ServiceReader } from "./writers";
+import { ResourceWriter } from "./writers";
+import { CreateResource } from "generated/definitions/CreateResource";
 
 // -------------------------------------
 // TestHandler
@@ -28,43 +26,34 @@ import { MessageWithContentReader, ServiceReader } from "./writers";
 
 type PostHandler = (
   context: Context,
-  fiscalCode: FiscalCode,
-  resourceId: NonEmptyString
+  body: CreateResource
 ) => Promise<
   | IResponseSuccessNoContent
   | IResponseErrorInternal
   | IResponseErrorNotFound
-  | IResponseErrorForbiddenNotAuthorized
 >;
 
 export const PostResourceHandler = (
-  retrieveMessageWithContent: MessageWithContentReader,
-  retrieveService: ServiceReader
+  resourceWriter: ResourceWriter,
 ): PostHandler => async (
-  _logger,
-  fiscalCode,
-  resourceId
+  _,
+  body
 ): ReturnType<PostHandler> =>
   pipe(
-    retrieveMessageWithContent(fiscalCode, resourceId),
-    TE.chain(res => retrieveService(res.senderServiceId)),
+    resourceWriter(body.fiscal_code),
     TE.map(_ => ResponseSuccessNoContent()),
     TE.toUnion
   )();
 
 export const PostResource = (
-  retrieveMessageWithContent: MessageWithContentReader,
-  retrieveService: ServiceReader
-  // eslint-disable-next-line max-params
+  resourceWriter: ResourceWriter,
 ): express.RequestHandler => {
-  const handler = GetResourceHandler(
-    retrieveMessageWithContent,
-    retrieveService
+  const handler = PostResourceHandler(
+    resourceWriter
   );
   const middlewaresWrap = withRequestMiddlewares(
     ContextMiddleware(),
-    FiscalCodeMiddleware,
-    RequiredParamMiddleware("resourceid", NonEmptyString)
+    RequiredBodyPayloadMiddleware(CreateResource)
   );
   return wrapRequestHandler(middlewaresWrap(handler));
 };

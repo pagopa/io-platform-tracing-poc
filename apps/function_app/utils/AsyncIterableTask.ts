@@ -4,7 +4,7 @@ import * as TE from "fp-ts/lib/TaskEither";
 import {
   asyncIterableToPageArray,
   IPage,
-  mapAsyncIterator,
+  mapAsyncIterator
 } from "@pagopa/io-functions-commons/dist/src/utils/async";
 import { pipe } from "fp-ts/lib/function";
 import { NonNegativeInteger } from "@pagopa/ts-commons/lib/numbers";
@@ -26,7 +26,7 @@ const mapAsyncIterable2 = <T, V>(
   const iterMapped = mapAsyncIterator(iter, f);
   return {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [Symbol.asyncIterator]: (): AsyncIterator<V, any, undefined> => iterMapped,
+    [Symbol.asyncIterator]: (): AsyncIterator<V, any, undefined> => iterMapped
   };
 };
 
@@ -39,16 +39,15 @@ const mapAsyncIterable2 = <T, V>(
 export const map: <A, B>(
   f: (a: A) => B | Promise<B>
 ) => // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-(fa: AsyncIterableTask<A>) => AsyncIterableTask<B> = (f) => (fa) =>
+(fa: AsyncIterableTask<A>) => AsyncIterableTask<B> = f => fa =>
   pipe(
     fa,
-    T.map((_) => mapAsyncIterable2(_, f))
+    T.map(_ => mapAsyncIterable2(_, f))
   );
 
-export const mapIterable =
-  <A, B>(f: (a: AsyncIterable<A>) => AsyncIterable<B>) =>
-  (fa: AsyncIterableTask<A>): AsyncIterableTask<B> =>
-    pipe(fa, T.map(f));
+export const mapIterable = <A, B>(
+  f: (a: AsyncIterable<A>) => AsyncIterable<B>
+) => (fa: AsyncIterableTask<A>): AsyncIterableTask<B> => pipe(fa, T.map(f));
 
 export const fromAsyncIterable = <A>(
   a: AsyncIterable<A>
@@ -58,7 +57,7 @@ export const fromAsyncIterator = <A>(
   a: AsyncIterator<A>
 ): AsyncIterableTask<A> =>
   fromAsyncIterable({
-    [Symbol.asyncIterator]: () => a,
+    [Symbol.asyncIterator]: () => a
   });
 
 /**
@@ -68,21 +67,21 @@ export const fold = <A>(fa: AsyncIterableTask<A>): T.Task<ReadonlyArray<A>> =>
   pipe(
     fa,
     // eslint-disable-next-line @typescript-eslint/no-use-before-define, @typescript-eslint/explicit-function-return-type
-    T.chain((_) => foldIterableArray<A>(_))
+    T.chain(_ => foldIterableArray<A>(_))
   );
 
 /**
  * Process an AsyncIterableTask that can fail and return either an error or an array of results
  */
-export const foldTaskEither =
-  <E, A>(onError: (err: unknown) => E) =>
-  (fa: AsyncIterableTask<A>): TE.TaskEither<E, ReadonlyArray<A>> =>
-    pipe(
-      fa,
-      TE.fromTask,
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      TE.chain((_) => TE.tryCatch(() => foldIterableArray<A>(_)(), onError))
-    );
+export const foldTaskEither = <E, A>(onError: (err: unknown) => E) => (
+  fa: AsyncIterableTask<A>
+): TE.TaskEither<E, ReadonlyArray<A>> =>
+  pipe(
+    fa,
+    TE.fromTask,
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    TE.chain(_ => TE.tryCatch(() => foldIterableArray<A>(_)(), onError))
+  );
 
 /**
  * Loop through the AsyncIterable collection and return all results
@@ -90,23 +89,23 @@ export const foldTaskEither =
  * @param asyncIterable the iterable to be read
  * @returns a readonly array of all values collected from the iterable
  */
-const foldIterableArray =
-  <A>(asyncIterable: AsyncIterable<A>) =>
-  async (): Promise<ReadonlyArray<A>> => {
-    // eslint-disable-next-line functional/prefer-readonly-type
-    const array: A[] = [];
-    for await (const variable of asyncIterable) {
-      // eslint-disable-next-line functional/immutable-data
-      array.push(variable);
-    }
-    return array;
-  };
+const foldIterableArray = <A>(
+  asyncIterable: AsyncIterable<A>
+) => async (): Promise<ReadonlyArray<A>> => {
+  // eslint-disable-next-line functional/prefer-readonly-type
+  const array: A[] = [];
+  for await (const variable of asyncIterable) {
+    // eslint-disable-next-line functional/immutable-data
+    array.push(variable);
+  }
+  return array;
+};
 
 export const run = <A>(fa: AsyncIterableTask<A>): T.Task<void> =>
   pipe(
     fa,
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    T.chain((asyncIterable) => async () => {
+    T.chain(asyncIterable => async () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       for await (const _ of asyncIterable) {
         // nothing to do: this is done to resolve the async iterator
@@ -117,52 +116,51 @@ export const run = <A>(fa: AsyncIterableTask<A>): T.Task<void> =>
 /**
  * Process an AsyncIterableTask that can fail and return either an error or an array of results
  */
-export const reduceTaskEither =
-  <E, A, B>(
-    onError: (err: unknown) => E,
-    initialValue: B,
-    reducer: (prev: B, curr: A) => B | Promise<B>
-  ) =>
-  (fa: AsyncIterableTask<A>): TE.TaskEither<E, B> =>
-    pipe(
-      fa,
-      TE.fromTask,
-      TE.chain((_) =>
-        TE.tryCatch(
-          // eslint-disable-next-line @typescript-eslint/no-use-before-define
-          reduceIterableArray(initialValue, reducer)(_),
-          onError
-        )
+export const reduceTaskEither = <E, A, B>(
+  onError: (err: unknown) => E,
+  initialValue: B,
+  reducer: (prev: B, curr: A) => B | Promise<B>
+) => (fa: AsyncIterableTask<A>): TE.TaskEither<E, B> =>
+  pipe(
+    fa,
+    TE.fromTask,
+    TE.chain(_ =>
+      TE.tryCatch(
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        reduceIterableArray(initialValue, reducer)(_),
+        onError
       )
-    );
+    )
+  );
 
 /**
  * Loop through the AsyncIterable collection and reduce it
  *
  */
-const reduceIterableArray =
-  <A, B>(initialValue: B, reducer: (prev: B, curr: A) => B | Promise<B>) =>
-  (asyncIterable: AsyncIterable<A>) =>
-  async (): Promise<B> => {
-    // eslint-disable-next-line functional/no-let
-    let p: B = initialValue;
+const reduceIterableArray = <A, B>(
+  initialValue: B,
+  reducer: (prev: B, curr: A) => B | Promise<B>
+) => (asyncIterable: AsyncIterable<A>) => async (): Promise<B> => {
+  // eslint-disable-next-line functional/no-let
+  let p: B = initialValue;
 
-    for await (const variable of asyncIterable) {
-      p = await reducer(p, variable);
-    }
-    return p;
-  };
+  for await (const variable of asyncIterable) {
+    p = await reducer(p, variable);
+  }
+  return p;
+};
 
 /**
  * Return a TaskEither of a paged result or an Error
  */
-export const toPageArray =
-  <E, A>(onError: (err: unknown) => E, pageSize: NonNegativeInteger) =>
-  (fa: AsyncIterableTask<A>): TE.TaskEither<E, IPage<A>> =>
-    pipe(
-      fa,
-      TE.fromTask,
-      TE.chain((_) =>
-        TE.tryCatch(() => asyncIterableToPageArray(_, pageSize), onError)
-      )
-    );
+export const toPageArray = <E, A>(
+  onError: (err: unknown) => E,
+  pageSize: NonNegativeInteger
+) => (fa: AsyncIterableTask<A>): TE.TaskEither<E, IPage<A>> =>
+  pipe(
+    fa,
+    TE.fromTask,
+    TE.chain(_ =>
+      TE.tryCatch(() => asyncIterableToPageArray(_, pageSize), onError)
+    )
+  );
