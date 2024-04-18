@@ -18,7 +18,6 @@ import { ContextMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/m
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 
 import { RequiredParamMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/required_param";
-import { FiscalCodeMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/fiscalcode";
 import { Context } from "@azure/functions";
 import { MessageWithContentReader, ServiceReader } from "./readers";
 
@@ -58,7 +57,7 @@ export const GetResource = (
   );
   const middlewaresWrap = withRequestMiddlewares(
     ContextMiddleware(),
-    FiscalCodeMiddleware,
+    RequiredParamMiddleware("fiscal_code", FiscalCode),
     RequiredParamMiddleware("resource_id", NonEmptyString)
   );
   return wrapRequestHandler(middlewaresWrap(handler));
