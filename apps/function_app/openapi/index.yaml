@@ -141,6 +141,7 @@ parameters:
   FiscalCodeParam:
     name: fiscal_code
     in: path
+    required: true
     x-example: SPNDNL80R13C555X
     type: string
     description: User's fiscal code.
