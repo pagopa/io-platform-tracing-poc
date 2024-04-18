@@ -47,7 +47,7 @@ const messageModel = new MessageModel(
 
 // Add express route
 app.get(
-  "/api/v1/resources/:fiscalcode/:resourceid",
+  "/api/v1/resources/:fiscal_code/:resource_id",
   GetResource(
     getMessageWithContent(messageModel, blobService)
   )
