@@ -50,7 +50,7 @@ export const createApp = async () => {
           () =>
             apiClient.getResource({
               fiscal_code: params.fiscal_code,
-              resourceid: params.resource_id,
+              resource_id: params.resource_id,
             }),
           E.toError
         )
