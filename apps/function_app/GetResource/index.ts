@@ -13,7 +13,6 @@ import {
   MessageModel,
   MESSAGE_COLLECTION_NAME
 } from "@pagopa/io-functions-commons/dist/src/models/message";
-import { ServiceModel } from "@pagopa/io-functions-commons/dist/src/models/service";
 import { initTelemetryClient } from "../utils/appinsights";
 import { getConfigOrThrow } from "../utils/config";
 import { cosmosdbInstance } from "../utils/cosmosdb";
@@ -46,14 +45,11 @@ const messageModel = new MessageModel(
   config.MESSAGE_CONTAINER_NAME
 );
 
-const serviceModel = new ServiceModel(cosmosdbInstance.container("services"));
-
 // Add express route
 app.get(
   "/api/v1/resources/:fiscalCode/:resourceid",
   GetResource(
-    getMessageWithContent(messageModel, blobService),
-    getService(serviceModel)
+    getMessageWithContent(messageModel, blobService)
   )
 );
 

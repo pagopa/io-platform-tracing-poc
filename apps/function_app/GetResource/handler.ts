@@ -23,10 +23,10 @@ import { Context } from "@azure/functions";
 import { MessageWithContentReader, ServiceReader } from "./readers";
 
 // -------------------------------------
-// TestHandler
+// GetHandler
 // -------------------------------------
 
-type TestHandler = (
+type GetHandler = (
   context: Context,
   fiscalCode: FiscalCode,
   resourceId: NonEmptyString
@@ -38,28 +38,23 @@ type TestHandler = (
 >;
 
 export const GetResourceHandler = (
-  retrieveMessageWithContent: MessageWithContentReader,
-  retrieveService: ServiceReader
-): TestHandler => async (
+  retrieveMessageWithContent: MessageWithContentReader
+): GetHandler => async (
   _logger,
   fiscalCode,
   resourceId
-): ReturnType<TestHandler> =>
+): ReturnType<GetHandler> =>
   pipe(
     retrieveMessageWithContent(fiscalCode, resourceId),
-    TE.chain(res => retrieveService(res.senderServiceId)),
     TE.map(_ => ResponseSuccessNoContent()),
     TE.toUnion
   )();
 
 export const GetResource = (
-  retrieveMessageWithContent: MessageWithContentReader,
-  retrieveService: ServiceReader
-  // eslint-disable-next-line max-params
+  retrieveMessageWithContent: MessageWithContentReader
 ): express.RequestHandler => {
   const handler = GetResourceHandler(
-    retrieveMessageWithContent,
-    retrieveService
+    retrieveMessageWithContent
   );
   const middlewaresWrap = withRequestMiddlewares(
     ContextMiddleware(),
