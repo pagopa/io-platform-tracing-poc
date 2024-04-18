@@ -16,6 +16,17 @@ schemes:
 security:
   - ApiKeyAuth: []
 paths:
+  /ready:
+    get:
+      operationId: info
+      summary: Info
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: There was an error in getting info.
+          schema:
+            $ref: '#/definitions/ProblemJson'
   /resource:
     post:
       operationId: postResource
@@ -40,7 +51,7 @@ paths:
         '404':
           description: Resource not found.
         '500':
-          description: There was an error in forwarding the notification.
+          description: There was an error in creating resource.
           schema:
             $ref: '#/definitions/ProblemJson'
       consumes:
