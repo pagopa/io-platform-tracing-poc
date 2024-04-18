@@ -19,7 +19,7 @@ import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 
 import { RequiredParamMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/required_param";
 import { Context } from "@azure/functions";
-import { MessageWithContentReader, ServiceReader } from "./readers";
+import {  ResourceReader } from "./readers";
 
 // -------------------------------------
 // GetHandler
@@ -37,23 +37,23 @@ type GetHandler = (
 >;
 
 export const GetResourceHandler = (
-  retrieveMessageWithContent: MessageWithContentReader
+  resourceReader: ResourceReader
 ): GetHandler => async (
   _logger,
   fiscalCode,
   resourceId
 ): ReturnType<GetHandler> =>
   pipe(
-    retrieveMessageWithContent(fiscalCode, resourceId),
+    resourceReader(fiscalCode, resourceId),
     TE.map(_ => ResponseSuccessNoContent()),
     TE.toUnion
   )();
 
 export const GetResource = (
-  retrieveMessageWithContent: MessageWithContentReader
+  resourceReader: ResourceReader
 ): express.RequestHandler => {
   const handler = GetResourceHandler(
-    retrieveMessageWithContent
+    resourceReader
   );
   const middlewaresWrap = withRequestMiddlewares(
     ContextMiddleware(),

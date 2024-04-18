@@ -1,7 +1,6 @@
 import express from "express";
 import * as winston from "winston";
 
-import { createBlobService } from "azure-storage";
 import { AzureFunction, Context } from "@azure/functions";
 
 import createAzureFunctionHandler from "@pagopa/express-azure-functions/dist/src/createAzureFunctionsHandler";
@@ -18,7 +17,7 @@ import { getConfigOrThrow } from "../utils/config";
 import { cosmosdbInstance } from "../utils/cosmosdb";
 
 import { GetResource } from "./handler";
-import { getMessageWithContent, getService } from "./readers";
+import { getResourceMetadata } from "./readers";
 
 // Get config
 const config = getConfigOrThrow();
@@ -30,8 +29,6 @@ const contextTransport = new AzureContextTransport(() => logger, {
 });
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 winston.add(contextTransport as any);
-
-const blobService = createBlobService(config.STORAGE_CONNECTION_STRING);
 
 // Setup Express
 const app = express();
@@ -49,7 +46,7 @@ const messageModel = new MessageModel(
 app.get(
   "/api/v1/resources/:fiscal_code/:resource_id",
   GetResource(
-    getMessageWithContent(messageModel, blobService)
+    getResourceMetadata(messageModel)
   )
 );
 
