@@ -39,8 +39,8 @@ export const createApp = async () => {
   app.get("/resources/:fiscal_code/:resource_id", (req: express.Request, res: express.Response) =>
     pipe(
       {
-        fiscal_code: req.query.fiscal_code,
-        resource_id: req.query.resource_id,
+        fiscal_code: req.params.fiscal_code,
+        resource_id: req.params.resource_id,
       },
       GetResourceParams.decode,
       E.mapLeft((errs) => Error(errorsToReadableMessages(errs).join("|"))),
