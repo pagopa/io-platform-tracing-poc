@@ -10,8 +10,8 @@ import {
 import {
   IResponseErrorInternal,
   IResponseErrorNotFound,
-  IResponseSuccessNoContent,
-  ResponseSuccessNoContent
+  IResponseSuccessJson,
+  ResponseSuccessJson
 } from "@pagopa/ts-commons/lib/responses";
 import { ContextMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/context_middleware";
 
@@ -19,6 +19,7 @@ import { RequiredBodyPayloadMiddleware } from "@pagopa/io-functions-commons/dist
 import { Context } from "@azure/functions";
 import { ResourceWriter } from "./writers";
 import { CreateResource } from "../generated/definitions/CreateResource";
+import { CreatedResource } from "../generated/definitions/CreatedResource";
 
 // -------------------------------------
 // TestHandler
@@ -28,29 +29,26 @@ type PostHandler = (
   context: Context,
   body: CreateResource
 ) => Promise<
-  | IResponseSuccessNoContent
+  | IResponseSuccessJson<CreatedResource>
   | IResponseErrorInternal
   | IResponseErrorNotFound
 >;
 
 export const PostResourceHandler = (
-  resourceWriter: ResourceWriter,
-): PostHandler => async (
-  _,
-  body
-): ReturnType<PostHandler> =>
+  resourceWriter: ResourceWriter
+): PostHandler => async (_, body): ReturnType<PostHandler> =>
   pipe(
     resourceWriter(body.fiscal_code),
-    TE.map(_ => ResponseSuccessNoContent()),
+    TE.map(res =>
+      ResponseSuccessJson({ fiscal_code: res.fiscalCode, resource_id: res.id })
+    ),
     TE.toUnion
   )();
 
 export const PostResource = (
-  resourceWriter: ResourceWriter,
+  resourceWriter: ResourceWriter
 ): express.RequestHandler => {
-  const handler = PostResourceHandler(
-    resourceWriter
-  );
+  const handler = PostResourceHandler(resourceWriter);
   const middlewaresWrap = withRequestMiddlewares(
     ContextMiddleware(),
     RequiredBodyPayloadMiddleware(CreateResource)

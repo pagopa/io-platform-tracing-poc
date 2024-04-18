@@ -38,8 +38,10 @@ paths:
             $ref: '#/definitions/CreateResource'
           required: true
       responses:
-        '204':
+        '200':
           description: Success.
+          schema:
+            $ref: '#/definitions/CreatedResource'
         '400':
           description: Bad request
           schema:
@@ -98,6 +100,13 @@ definitions:
     x-import: '@pagopa/ts-commons/lib/strings'
     example: SPNDNL80R13C555X
   CreateResource:
+    type: object
+    properties:
+      fiscal_code:
+        $ref: '#/definitions/FiscalCode'
+    required:
+      - fiscal_code
+  CreatedResource:
     type: object
     properties:
       fiscal_code:
