@@ -1,6 +1,6 @@
 import { pipe } from "fp-ts/lib/function";
 import * as TE from "fp-ts/TaskEither";
-import { MessageModel, RetrievedMessage } from "@pagopa/io-functions-commons/dist/src/models/message";
+import { MessageModel, RetrievedMessageWithoutContent } from "@pagopa/io-functions-commons/dist/src/models/message";
 
 import {
   IResponseErrorInternal,
@@ -13,7 +13,7 @@ import * as ulid from "ulid";
 
 export type ResourceWriter = (
   fiscalCode: FiscalCode
-) => TE.TaskEither<IResponseErrorInternal | IResponseErrorNotFound, RetrievedMessage>;
+) => TE.TaskEither<IResponseErrorInternal | IResponseErrorNotFound, RetrievedMessageWithoutContent>;
 
 export const writeResource = (
   model: MessageModel
@@ -34,5 +34,8 @@ export const writeResource = (
       }),
     TE.mapLeft(_ =>
       ResponseErrorInternal("Error while retrieving the message metadata")
-    )
+    ), TE.map(res => ({
+      ...res,
+      kind: "IRetrievedMessageWithoutContent"
+    }))
   );
