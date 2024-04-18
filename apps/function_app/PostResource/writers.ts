@@ -10,6 +10,7 @@ import {
 import { FiscalCode, NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import { FeatureLevelTypeEnum } from "@pagopa/io-functions-commons/dist/generated/definitions/FeatureLevelType";
 import * as ulid from "ulid";
+import { faker } from "@faker-js/faker";
 
 export type ResourceWriter = (
   fiscalCode: FiscalCode
@@ -27,8 +28,8 @@ export const writeResource = (
         indexedId: resourceId,
         createdAt: new Date(),
         featureLevelType: FeatureLevelTypeEnum.STANDARD,
-        senderServiceId: undefined,
-        senderUserId: undefined,
+        senderServiceId: faker.string.alphanumeric() as NonEmptyString,
+        senderUserId: faker.string.alpha(10) as NonEmptyString,
         timeToLiveSeconds: 604800,
         kind: "INewMessageWithoutContent"
       }),
