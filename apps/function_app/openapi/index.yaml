@@ -64,7 +64,7 @@ paths:
       summary: Get Resource by its Id
       parameters:
         - $ref: '#/parameters/FiscalCodeParam'
-        - name: resourceid
+        - name: resource_id
           in: path
           type: string
           required: true

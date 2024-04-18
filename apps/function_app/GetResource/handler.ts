@@ -59,7 +59,7 @@ export const GetResource = (
   const middlewaresWrap = withRequestMiddlewares(
     ContextMiddleware(),
     FiscalCodeMiddleware,
-    RequiredParamMiddleware("resourceid", NonEmptyString)
+    RequiredParamMiddleware("resource_id", NonEmptyString)
   );
   return wrapRequestHandler(middlewaresWrap(handler));
 };
