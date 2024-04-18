@@ -10,7 +10,7 @@ info:
   description: |
     # Warning Experimental API These apis are experimental and for internal use.
 host: api.cd.italia.it
-basePath: /service-messages/api/v1
+basePath: /api/v1
 schemes:
   - https
 security:
