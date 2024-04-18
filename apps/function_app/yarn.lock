@@ -179,10 +179,10 @@
     fast-xml-parser "^4.3.2"
     tslib "^2.6.2"
 
-"@azure/cosmos@^3.17.1":
-  version "3.17.3"
-  resolved "https://registry.yarnpkg.com/@azure/cosmos/-/cosmos-3.17.3.tgz#380398496af8ef3473ae0a9ad8cdbab32d91eb08"
-  integrity sha512-wBglkQ6Irjv5Vo2iw8fd6eYj60WYRSSg4/0DBkeOP6BwQ4RA91znsOHd6s3qG6UAbNgYuzC9Nnq07vlFFZkHEw==
+"@azure/cosmos@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@azure/cosmos/-/cosmos-4.0.0.tgz#5fda8b35cb62bbcda52159b96c4c3981a843d5b9"
+  integrity sha512-/Z27p1+FTkmjmm8jk90zi/HrczPHw2t8WecFnsnTe4xGocWl0Z4clP0YlLUTJPhRLWYa5upwD9rMvKJkS1f1kg==
   dependencies:
     "@azure/abort-controller" "^1.0.0"
     "@azure/core-auth" "^1.3.0"
@@ -1207,12 +1207,12 @@
   resolved "https://registry.yarnpkg.com/@pagopa/express-azure-functions/-/express-azure-functions-2.1.1.tgz#ac6aa6d8c8d82b64e0db19ccadd2e89cc35ea725"
   integrity sha512-x2kBGS6JKYqVp7PS9QiBc2AWIOPBObHwlaheJmxZJacnxmLdXHobomTzN2UJMxu55fxMd7xIxqM8VGMQxSzqiw==
 
-"@pagopa/io-functions-commons@^28.22.0":
-  version "28.22.0"
-  resolved "https://registry.yarnpkg.com/@pagopa/io-functions-commons/-/io-functions-commons-28.22.0.tgz#169d3f6173db136766a53db3cd5be5bb9e2eb926"
-  integrity sha512-RIoNA+PS7A6zVe9bwDC3X/lmg9CuDiV8aFgH7vp/aB2f0gQMssXShlZRoL9Top6YXWyhsP1TVsH3rYGc76KbAA==
+"@pagopa/io-functions-commons@^29.0.0":
+  version "29.0.0"
+  resolved "https://registry.yarnpkg.com/@pagopa/io-functions-commons/-/io-functions-commons-29.0.0.tgz#b41478d822db98b0f83d84618e0d0d221a6ffd7c"
+  integrity sha512-GcENB3abynGuQ701XN4GCrxqyx7S6HCyA7MAgVvOWJSCo8/UU06JgM3a2J2EevMvtl6KQ3AEw0529XSr9Rb0kg==
   dependencies:
-    "@azure/cosmos" "^3.17.1"
+    "@azure/cosmos" "^4.0.0"
     "@azure/data-tables" "^13.2.2"
     "@pagopa/ts-commons" "^12.6.0"
     applicationinsights "^2.9.5"

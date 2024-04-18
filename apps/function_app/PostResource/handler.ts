@@ -18,7 +18,7 @@ import { ContextMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/m
 import { RequiredBodyPayloadMiddleware } from "@pagopa/io-functions-commons/dist/src/utils/middlewares/required_body_payload";
 import { Context } from "@azure/functions";
 import { ResourceWriter } from "./writers";
-import { CreateResource } from "generated/definitions/CreateResource";
+import { CreateResource } from "../generated/definitions/CreateResource";
 
 // -------------------------------------
 // TestHandler
