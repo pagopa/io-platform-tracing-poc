@@ -10,28 +10,67 @@ info:
   description: |
     # Warning Experimental API These apis are experimental and for internal use.
 host: api.cd.italia.it
-basePath: /service-messages/api/v1
+basePath: /api/v1
 schemes:
   - https
 security:
   - ApiKeyAuth: []
 paths:
-  /ping:
+  /ready:
     get:
-      operationId: pingOperation
-      summary: Ping
-      description: Returns function's package name and version
-      tags:
-        - restricted
+      operationId: info
+      summary: Info
+      responses:
+        '200':
+          description: Success
+        '500':
+          description: There was an error in getting info.
+          schema:
+            $ref: '#/definitions/ProblemJson'
+  /resource:
+    post:
+      operationId: postResource
+      summary: Create Resource
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: '#/definitions/CreateResource'
+          required: true
       responses:
         '200':
           description: Success.
+          schema:
+            $ref: '#/definitions/CreatedResource'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ProblemJson'
+        '401':
+          description: Token null or invalid.
+        '403':
+          description: Request not authorized.
+        '404':
+          description: Resource not found.
         '500':
-          description: Internal Server error
-  /test:
+          description: There was an error in creating resource.
+          schema:
+            $ref: '#/definitions/ProblemJson'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+  /resources/{fiscal_code}/{resource_id}:
     get:
-      operationId: test
-      summary: Test
+      operationId: getResource
+      summary: Get Resource by its Id
+      parameters:
+        - $ref: '#/parameters/FiscalCodeParam'
+        - name: resource_id
+          in: path
+          type: string
+          required: true
+          description: The ID of the resource.
       responses:
         '204':
           description: Success.
@@ -54,6 +93,30 @@ paths:
       produces:
         - application/json
 definitions:
+  FiscalCode:
+    type: string
+    description: User's fiscal code.
+    format: FiscalCode
+    x-import: '@pagopa/ts-commons/lib/strings'
+    example: SPNDNL80R13C555X
+  CreateResource:
+    type: object
+    properties:
+      fiscal_code:
+        $ref: '#/definitions/FiscalCode'
+    required:
+      - fiscal_code
+  CreatedResource:
+    type: object
+    properties:
+      fiscal_code:
+        $ref: '#/definitions/FiscalCode'
+      resource_id:
+        type: string
+        minLenght: 1
+    required:
+      - fiscal_code
+      - resource_id
   ProblemJson:
     type: object
     properties:
@@ -94,7 +157,12 @@ definitions:
           An absolute URI that identifies the specific occurrence of the problem.
 
           It may or may not yield further information if dereferenced.
-  FiscalCode:
+parameters:
+  FiscalCodeParam:
+    name: fiscal_code
+    in: path
+    required: true
+    x-example: SPNDNL80R13C555X
     type: string
     description: User's fiscal code.
     format: FiscalCode

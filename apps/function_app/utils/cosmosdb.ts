@@ -14,7 +14,7 @@ export const cosmosDbKey = config.COSMOSDB_KEY;
 
 export const cosmosdbClient = new CosmosClient({
   endpoint: cosmosDbUri,
-  key: cosmosDbKey,
+  key: cosmosDbKey
 });
 
 export const cosmosdbInstance = cosmosdbClient.database(cosmosDbName);
