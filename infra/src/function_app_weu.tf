@@ -28,7 +28,11 @@ module "function_app_weu" {
 
   app_settings = merge(
     local.function_app_settings,
-    {}
+    {
+      COSMOSDB_NAME = azurerm_cosmosdb_sql_database.db_weu.name
+      COSMOSDB_URI  = azurerm_cosmosdb_account.cosmos_account_weu.endpoint
+      COSMOSDB_KEY  = azurerm_cosmosdb_account.cosmos_account_weu.primary_key
+    }
   )
 
   sticky_app_setting_names = []
