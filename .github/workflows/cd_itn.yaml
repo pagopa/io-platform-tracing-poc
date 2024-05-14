@@ -4,21 +4,21 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  deploy_app_to_itn_azure:
-    name: Deploy App Service
-    uses: ./.github/workflows/app_deploy.yaml
-    with:
-      environment: dev
-      workspace-name: app_service
-      resource-group: io-d-itn-tracing-poc-rg
-      app-name: io-d-itn-tracing-poc-app
-    secrets: inherit
+  # deploy_app_to_itn_azure:
+  #   name: Deploy App Service
+  #   uses: ./.github/workflows/app_deploy.yaml
+  #   with:
+  #     environment: dev
+  #     workspace-name: app_service
+  #     resource-group: io-d-itn-tracing-poc-rg
+  #     app-name: io-d-itn-tracing-poc-app
+  #   secrets: inherit
   deploy_function_to_itn_azure:
     name: Deploy Function App
     uses: ./.github/workflows/function_deploy.yaml
     with:
       environment: dev
       workspace-name: function_app
-      resource-group: io-d-itn-tracing-poc-rg
-      app-name: io-d-itn-tracing-poc-fn
+      resource-group: dx-d-itn-typescript-rg-01
+      app-name: dx-d-itn-typescript-test-func-01
     secrets: inherit
