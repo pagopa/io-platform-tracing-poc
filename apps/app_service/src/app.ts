@@ -12,6 +12,7 @@ import { GetResourceParams } from "./utils/types";
 import { CreateResource } from "../generated/definitions/CreateResource";
 import { IResponseType } from "@pagopa/ts-commons/lib/requests";
 import { CreatedResource } from "../generated/definitions/CreatedResource";
+import * as v8 from "v8"
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createApp = async () => {
@@ -111,6 +112,8 @@ export const createApp = async () => {
     // eslint-disable-next-line no-console
     console.log(`Example app service listening on port ${config.SERVER_PORT}`);
   });
+
+  setInterval(() => v8.writeHeapSnapshot(), 60000 * 15)
 };
 
 createApp().then(console.log).catch(console.error);
