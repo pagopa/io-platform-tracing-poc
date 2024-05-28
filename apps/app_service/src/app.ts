@@ -137,7 +137,7 @@ export const createApp = async () => {
         O.map(() =>
           pipe(v8.getHeapSnapshot(), (snapshotStream) =>
             pipe(
-              `${Date.now}-heapdump`,
+              `${Date.now()}-heapdump`,
               (fileName) => [
                 heapWriter.writeBlob(fileName, snapshotStream),
                 heapWriter.writeFile(fileName),
