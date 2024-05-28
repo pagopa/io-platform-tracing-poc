@@ -129,6 +129,10 @@ export const createApp = async () => {
       await pipe(
         v8.getHeapStatistics(),
         (memInfo) => (memInfo.used_heap_size * 100) / memInfo.heap_size_limit,
+        usedHeapSizePerc => {
+          console.log(`============ usedHeapSizePerc ============> ${usedHeapSizePerc}`);
+          return usedHeapSizePerc;
+        },
         O.fromPredicate((perc) => perc > config.HEAP_LIMIT_PERCENTAGE),
         O.map(() =>
           pipe(v8.getHeapSnapshot(), (snapshotStream) =>
@@ -145,7 +149,7 @@ export const createApp = async () => {
         O.getOrElseW(() => TE.right(void 0)),
         TE.toUnion
       )(),
-    60000 * 15
+    60000 * config.HEAP_CHECK_FREQUENCY_IN_MINUTES
   );
 };
 

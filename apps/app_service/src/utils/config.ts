@@ -20,6 +20,10 @@ import { withDefault } from "@pagopa/ts-commons/lib/types";
 const DEFAULT_SERVER_PORT = "80";
 const HeapdumpConfig = t.type({
   STORAGE_CONN_STRING: NonEmptyString,
+  HEAP_CHECK_FREQUENCY_IN_MINUTES: withDefault(
+    NonNegativeIntegerFromString,
+    15 as NonNegativeInteger
+  ),
   HEAP_CONTAINER_NAME: NonEmptyString,
   HEAP_LIMIT_PERCENTAGE: withDefault(
     NonNegativeIntegerFromString,
