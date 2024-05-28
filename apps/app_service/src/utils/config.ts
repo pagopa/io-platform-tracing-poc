@@ -20,19 +20,24 @@ import { errorsToReadableMessages } from "@pagopa/ts-commons/lib/reporters";
 
 const DEFAULT_SERVER_PORT = "80";
 const HeapdumpConfig = t.union([
-  t.type({
-    HEAP_DUMP_ACTIVE: t.literal(true),
-    HEAP_DUMP_STORAGE_CONN_STRING: NonEmptyString,
-    HEAP_CHECK_FREQUENCY_IN_MINUTES: withDefault(
-      NonNegativeIntegerFromString,
-      15 as NonNegativeInteger
-    ),
-    HEAP_CONTAINER_NAME: NonEmptyString,
-    HEAP_LIMIT_PERCENTAGE: withDefault(
-      NonNegativeIntegerFromString,
-      70 as NonNegativeInteger
-    ),
-  }),
+  t.intersection([
+    t.type({
+      HEAP_DUMP_ACTIVE: t.literal(true),
+      HEAP_DUMP_STORAGE_CONN_STRING: NonEmptyString,
+      HEAP_CHECK_FREQUENCY_IN_MINUTES: withDefault(
+        NonNegativeIntegerFromString,
+        15 as NonNegativeInteger
+      ),
+      HEAP_CONTAINER_NAME: NonEmptyString,
+      HEAP_LIMIT_PERCENTAGE: withDefault(
+        NonNegativeIntegerFromString,
+        70 as NonNegativeInteger
+      ),
+    }),
+    t.partial({
+      WEBSITE_DEPLOYMENT_ID: NonEmptyString,
+    }),
+  ]),
   t.type({
     HEAP_DUMP_ACTIVE: t.literal(false),
   }),

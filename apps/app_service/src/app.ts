@@ -2,7 +2,6 @@
 import * as TE from "fp-ts/lib/TaskEither";
 import * as E from "fp-ts/lib/Either";
 import * as O from "fp-ts/lib/Option";
-import * as AR from "fp-ts/lib/Array";
 import express from "express";
 import * as bodyParser from "body-parser";
 import { flow, pipe } from "fp-ts/lib/function";
@@ -16,6 +15,7 @@ import { IResponseType } from "@pagopa/ts-commons/lib/requests";
 import { CreatedResource } from "../generated/definitions/CreatedResource";
 import * as v8 from "v8";
 import { getBlobServiceClient, uploadFile } from "./utils/blob";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createApp = async () => {
@@ -125,6 +125,21 @@ export const createApp = async () => {
       })
     );
 
+    const getFilename = (siteName?: NonEmptyString) =>
+      pipe(
+      new Date()
+        .toISOString()
+        .replace(/T/, "_")
+        .replace(/\..+/, "")
+        .replace(/\:/, "-"),
+        dateFmt => pipe(
+          siteName,
+          O.fromNullable,
+          O.map(name => `${dateFmt}-${name}`),
+          O.getOrElse(() => dateFmt)
+        )
+      );
+
     setInterval(
       async () =>
         await pipe(
@@ -134,7 +149,7 @@ export const createApp = async () => {
           O.map(() =>
             pipe(v8.getHeapSnapshot(), (snapshotStream) =>
               heapWriter.writeBlob(
-                `${Date.now()}-heapdump.heapsnapshot`,
+                `${getFilename(config.WEBSITE_DEPLOYMENT_ID)}-heapdump.heapsnapshot`,
                 snapshotStream
               )
             )
