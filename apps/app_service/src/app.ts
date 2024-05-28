@@ -137,7 +137,7 @@ export const createApp = async () => {
         O.fromPredicate((perc) => perc > config.HEAP_LIMIT_PERCENTAGE),
         O.map(() =>
           pipe(v8.getHeapSnapshot(), (snapshotStream) =>
-            heapWriter.writeBlob(`${Date.now()}-heapdump`, snapshotStream)
+            heapWriter.writeBlob(`${Date.now()}-heapdump.heapsnapshot`, snapshotStream)
           )
         ),
         O.getOrElseW(() => TE.right(void 0)),
