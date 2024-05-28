@@ -819,6 +819,46 @@
   resolved "https://registry.yarnpkg.com/@opentelemetry/semantic-conventions/-/semantic-conventions-1.24.1.tgz#d4bcebda1cb5146d47a2a53daaa7922f8e084dfb"
   integrity sha512-VkliWlS4/+GHLLW7J/rVBA00uXus1SWvwFvcUDxDwmFxYfg/2VI6ekwdXS28cjI8Qz2ky2BzG8OUHo+WeYIWqw==
 
+"@oven/bun-darwin-aarch64@1.1.10":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@oven/bun-darwin-aarch64/-/bun-darwin-aarch64-1.1.10.tgz#0f6947997b7dc7b417edb90faa18f0fe13e6fe9c"
+  integrity sha512-5x6QGEzTurmCPZM3OLosIJE0QynhKfKZZ6uSVl7C36mNPFAZfTXjK64LgbM+4P9Kr0PyEQnZweLlScl+HaEJcw==
+
+"@oven/bun-darwin-x64-baseline@1.1.10":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@oven/bun-darwin-x64-baseline/-/bun-darwin-x64-baseline-1.1.10.tgz#db9e28f89fda25130695d3e8c17f56fd72ad2bd4"
+  integrity sha512-a/P612tHH86gpBiITwHmrpFMLT9Z/v6VxBKpPK+FgejIgLDGvzfIOxbNtBeGygWbZaAFDQfRRQJFGpVHvjwGQA==
+
+"@oven/bun-darwin-x64@1.1.10":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@oven/bun-darwin-x64/-/bun-darwin-x64-1.1.10.tgz#01f574499ceed99792bc9e0ac861018008f06f9a"
+  integrity sha512-DYbp2koaATwWikMIyeWLq2LhLZtvxzr4WuFIBe4+KwoWLGXJEC8uK9QsTwis/tCLPH45ov9DMwDmBA31oX+0iA==
+
+"@oven/bun-linux-aarch64@1.1.10":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@oven/bun-linux-aarch64/-/bun-linux-aarch64-1.1.10.tgz#edd781bdb01e9336d8706ef8fef665d47333cb65"
+  integrity sha512-iR7TRUWtVtrPe+iZu1ISQNbz7M6HxMRtn4PCr/a6dswuPkIhvXxTJUD6WTpHnHxsgioS5GHG9eonu03PTeBY0Q==
+
+"@oven/bun-linux-x64-baseline@1.1.10":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@oven/bun-linux-x64-baseline/-/bun-linux-x64-baseline-1.1.10.tgz#5187701e79d5dd8bbac9a60d286bde69f91ef76c"
+  integrity sha512-TjBH/KIyI/4Ms3PJYRm2QEgI7HOyV5fXdwqwB/40SCPXND6wq0u4voHDIINc9rdHDRXpmO8RPUFWsKNuN3Mf5w==
+
+"@oven/bun-linux-x64@1.1.10":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@oven/bun-linux-x64/-/bun-linux-x64-1.1.10.tgz#ca679bdccde75b51dda72c936b9ac865cd883278"
+  integrity sha512-pUgLdu/5Yn+hV8aIwZE0x2H/t2QQRIPWUibnUdDLglnNtGjaqNUyST9iVN5TD7NdMk1p342GDc9rouA8VxAHHA==
+
+"@oven/bun-windows-x64-baseline@1.1.10":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@oven/bun-windows-x64-baseline/-/bun-windows-x64-baseline-1.1.10.tgz#18d7032d2617b146b2eb048067bbed61237f0ad7"
+  integrity sha512-+q2pDLq9VCXYJ89pcT5AevXUTGdDoqgq+scE3qlKLclSxtSR25K18C61D9rpqgiueC6jLrxIN13w5qOi4B3LfQ==
+
+"@oven/bun-windows-x64@1.1.10":
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/@oven/bun-windows-x64/-/bun-windows-x64-1.1.10.tgz#d8294a7f479d6d34e02ae2034906d262c6bfa339"
+  integrity sha512-+KiITh1xyrDGoRXM3HLHyO9iweaMZ9T41KP4cbov92D78SKxR5jpq1LDLPhWK668a0aNX/r9PGePkPNt4yg/HA==
+
 "@pagopa/eslint-config@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@pagopa/eslint-config/-/eslint-config-3.0.0.tgz#a773121788299eaeb9ba71c2ad2bf5ea795028d6"
@@ -1714,6 +1754,20 @@ buffer-from@^1.0.0:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
   integrity sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==
+
+bun@^1.1.8:
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/bun/-/bun-1.1.10.tgz#fa9a5542261a5e321519b53839f7d037c302535b"
+  integrity sha512-qOJXrQZSzJ5DbJMt47GZGWtUSmIkbwD7fPSN/XS/T46D4cTTnPK46QDHlyC8VD+Anvs6uKNwuwKIyB31kUdHmQ==
+  optionalDependencies:
+    "@oven/bun-darwin-aarch64" "1.1.10"
+    "@oven/bun-darwin-x64" "1.1.10"
+    "@oven/bun-darwin-x64-baseline" "1.1.10"
+    "@oven/bun-linux-aarch64" "1.1.10"
+    "@oven/bun-linux-x64" "1.1.10"
+    "@oven/bun-linux-x64-baseline" "1.1.10"
+    "@oven/bun-windows-x64" "1.1.10"
+    "@oven/bun-windows-x64-baseline" "1.1.10"
 
 bytes@3.1.2:
   version "3.1.2"
@@ -3369,6 +3423,11 @@ interpret@^1.0.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.4.0.tgz#665ab8bc4da27a774a40584e812e3e0fa45b1a1e"
   integrity sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
+
+io-ts-types@^0.5.19:
+  version "0.5.19"
+  resolved "https://registry.yarnpkg.com/io-ts-types/-/io-ts-types-0.5.19.tgz#9c04fa73f15992436605218a5686b610efa7a5d3"
+  integrity sha512-kQOYYDZG5vKre+INIDZbLeDJe+oM+4zLpUkjXyTMyUfoCpjJNyi29ZLkuEAwcPufaYo3yu/BsemZtbdD+NtRfQ==
 
 io-ts@^2.2.16, io-ts@^2.2.20:
   version "2.2.21"

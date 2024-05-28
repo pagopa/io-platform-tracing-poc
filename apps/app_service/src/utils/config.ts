@@ -15,8 +15,8 @@ import {
   NonNegativeIntegerFromString,
 } from "@pagopa/ts-commons/lib/numbers";
 import { readableReport } from "./logging";
-import { withDefault } from "@pagopa/ts-commons/lib/types";
 import { errorsToReadableMessages } from "@pagopa/ts-commons/lib/reporters";
+import { withFallback } from "io-ts-types";
 
 const DEFAULT_SERVER_PORT = "80";
 const HeapdumpConfig = t.union([
@@ -24,12 +24,12 @@ const HeapdumpConfig = t.union([
     t.type({
       HEAP_DUMP_ACTIVE: t.literal(true),
       HEAP_DUMP_STORAGE_CONN_STRING: NonEmptyString,
-      HEAP_CHECK_FREQUENCY_IN_MINUTES: withDefault(
+      HEAP_CHECK_FREQUENCY_IN_MINUTES: withFallback(
         NonNegativeIntegerFromString,
         15 as NonNegativeInteger
       ),
       HEAP_CONTAINER_NAME: NonEmptyString,
-      HEAP_LIMIT_PERCENTAGE: withDefault(
+      HEAP_LIMIT_PERCENTAGE: withFallback(
         NonNegativeIntegerFromString,
         70 as NonNegativeInteger
       ),
