@@ -23,12 +23,6 @@ export const createApp = async () => {
 
   const apiClient = FnClient(config.FN_CLIENT_KEY, config.FN_CLIENT_BASE_URL);
 
-  const heapWriter = pipe(
-    getBlobServiceClient(config.STORAGE_CONN_STRING),
-    (client) => ({
-      writeBlob: uploadFile(client, config.HEAP_CONTAINER_NAME),
-    })
-  );
   const app = express();
 
   initTelemetryClient();
@@ -123,28 +117,34 @@ export const createApp = async () => {
     console.log(`Example app service listening on port ${config.SERVER_PORT}`);
   });
 
-  setInterval(
-    async () =>
-      await pipe(
-        v8.getHeapStatistics(),
-        (memInfo) => (memInfo.used_heap_size * 100) / memInfo.heap_size_limit,
-        (usedHeapSizePerc) => {
-          console.log(
-            `============ usedHeapSizePerc ============> ${usedHeapSizePerc}`
-          );
-          return usedHeapSizePerc;
-        },
-        O.fromPredicate((perc) => perc > config.HEAP_LIMIT_PERCENTAGE),
-        O.map(() =>
-          pipe(v8.getHeapSnapshot(), (snapshotStream) =>
-            heapWriter.writeBlob(`${Date.now()}-heapdump.heapsnapshot`, snapshotStream)
-          )
-        ),
-        O.getOrElseW(() => TE.right(void 0)),
-        TE.toUnion
-      )(),
-    60000 * config.HEAP_CHECK_FREQUENCY_IN_MINUTES
-  );
+  if (config.HEAP_DUMP_ACTIVE) {
+    const heapWriter = pipe(
+      getBlobServiceClient(config.HEAP_DUMP_STORAGE_CONN_STRING),
+      (client) => ({
+        writeBlob: uploadFile(client, config.HEAP_CONTAINER_NAME),
+      })
+    );
+
+    setInterval(
+      async () =>
+        await pipe(
+          v8.getHeapStatistics(),
+          (memInfo) => (memInfo.used_heap_size * 100) / memInfo.heap_size_limit,
+          O.fromPredicate((perc) => perc > config.HEAP_LIMIT_PERCENTAGE),
+          O.map(() =>
+            pipe(v8.getHeapSnapshot(), (snapshotStream) =>
+              heapWriter.writeBlob(
+                `${Date.now()}-heapdump.heapsnapshot`,
+                snapshotStream
+              )
+            )
+          ),
+          O.getOrElseW(() => TE.right(void 0)),
+          TE.toUnion
+        )(),
+      60000 * config.HEAP_CHECK_FREQUENCY_IN_MINUTES
+    );
+  }
 };
 
 createApp().then(console.log).catch(console.error);

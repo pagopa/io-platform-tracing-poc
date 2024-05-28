@@ -18,18 +18,24 @@ import { readableReport } from "./logging";
 import { withDefault } from "@pagopa/ts-commons/lib/types";
 
 const DEFAULT_SERVER_PORT = "80";
-const HeapdumpConfig = t.type({
-  STORAGE_CONN_STRING: NonEmptyString,
-  HEAP_CHECK_FREQUENCY_IN_MINUTES: withDefault(
-    NonNegativeIntegerFromString,
-    15 as NonNegativeInteger
-  ),
-  HEAP_CONTAINER_NAME: NonEmptyString,
-  HEAP_LIMIT_PERCENTAGE: withDefault(
-    NonNegativeIntegerFromString,
-    70 as NonNegativeInteger
-  ),
-});
+const HeapdumpConfig = t.union([
+  t.type({
+    HEAP_DUMP_ACTIVE: t.literal(true),
+    HEAP_DUMP_STORAGE_CONN_STRING: NonEmptyString,
+    HEAP_CHECK_FREQUENCY_IN_MINUTES: withDefault(
+      NonNegativeIntegerFromString,
+      15 as NonNegativeInteger
+    ),
+    HEAP_CONTAINER_NAME: NonEmptyString,
+    HEAP_LIMIT_PERCENTAGE: withDefault(
+      NonNegativeIntegerFromString,
+      70 as NonNegativeInteger
+    ),
+  }),
+  t.type({
+    HEAP_DUMP_ACTIVE: t.literal(false),
+  }),
+]);
 type HeapdumpConfig = t.TypeOf<typeof HeapdumpConfig>;
 
 // global app configuration
