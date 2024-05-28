@@ -80,6 +80,7 @@ export const getConfigOrThrow = (): IConfig =>
   pipe(
     errorOrConfig,
     E.getOrElse((errors) => {
+      console.log(`Invalid configuration: ${readableReport(errors)}`);
       throw new Error(`Invalid configuration: ${readableReport(errors)}`);
     })
   );
