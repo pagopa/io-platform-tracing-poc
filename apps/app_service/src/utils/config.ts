@@ -22,7 +22,7 @@ const HeapdumpConfig = t.type({
   STORAGE_CONN_STRING: NonEmptyString,
   HEAP_CONTAINER_NAME: NonEmptyString,
   HEAP_LIMIT_PERCENTAGE: withDefault(
-    NonNegativeInteger,
+    NonNegativeIntegerFromString,
     70 as NonNegativeInteger
   ),
 });
