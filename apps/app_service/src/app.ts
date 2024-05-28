@@ -27,7 +27,6 @@ export const createApp = async () => {
     getBlobServiceClient(config.STORAGE_CONN_STRING),
     (client) => ({
       writeBlob: uploadFile(client, config.HEAP_CONTAINER_NAME),
-      writeFile: v8.writeHeapSnapshot,
     })
   );
   const app = express();
