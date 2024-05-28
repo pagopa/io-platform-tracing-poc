@@ -129,7 +129,7 @@ export const createApp = async () => {
       await pipe(
         v8.getHeapStatistics(),
         (memInfo) => (memInfo.used_heap_size * 100) / memInfo.heap_size_limit,
-        O.fromPredicate((perc) => perc > 70),
+        O.fromPredicate((perc) => perc > config.HEAP_LIMIT_PERCENTAGE),
         O.map(() =>
           pipe(v8.getHeapSnapshot(), (snapshotStream) =>
             pipe(
