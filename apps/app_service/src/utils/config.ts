@@ -20,6 +20,8 @@ export const IConfig = t.intersection([
   t.type({
     APPINSIGHTS_INSTRUMENTATIONKEY: NonEmptyString,
     FN_CLIENT_KEY: NonEmptyString,
+    STORAGE_CONN_STRING: NonEmptyString,
+    HEAP_CONTAINER_NAME: NonEmptyString,
     SERVER_PORT: NonNegativeIntegerFromString,
     isProduction: t.boolean,
   }),
