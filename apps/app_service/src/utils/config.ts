@@ -16,6 +16,7 @@ import {
 } from "@pagopa/ts-commons/lib/numbers";
 import { readableReport } from "./logging";
 import { withDefault } from "@pagopa/ts-commons/lib/types";
+import { errorsToReadableMessages } from "@pagopa/ts-commons/lib/reporters";
 
 const DEFAULT_SERVER_PORT = "80";
 const HeapdumpConfig = t.union([
@@ -80,7 +81,7 @@ export const getConfigOrThrow = (): IConfig =>
   pipe(
     errorOrConfig,
     E.getOrElse((errors) => {
-      console.log(`Invalid configuration: ${readableReport(errors)}`);
+      console.log(`Invalid configuration: ${errorsToReadableMessages(errors)}`);
       throw new Error(`Invalid configuration: ${readableReport(errors)}`);
     })
   );
