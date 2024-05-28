@@ -129,21 +129,16 @@ export const createApp = async () => {
       await pipe(
         v8.getHeapStatistics(),
         (memInfo) => (memInfo.used_heap_size * 100) / memInfo.heap_size_limit,
-        usedHeapSizePerc => {
-          console.log(`============ usedHeapSizePerc ============> ${usedHeapSizePerc}`);
+        (usedHeapSizePerc) => {
+          console.log(
+            `============ usedHeapSizePerc ============> ${usedHeapSizePerc}`
+          );
           return usedHeapSizePerc;
         },
         O.fromPredicate((perc) => perc > config.HEAP_LIMIT_PERCENTAGE),
         O.map(() =>
           pipe(v8.getHeapSnapshot(), (snapshotStream) =>
-            pipe(
-              `${Date.now()}-heapdump`,
-              (fileName) => [
-                heapWriter.writeBlob(fileName, snapshotStream),
-                heapWriter.writeFile(fileName),
-              ],
-              AR.sequence(TE.ApplicativePar)
-            )
+            heapWriter.writeBlob(`${Date.now()}-heapdump`, snapshotStream)
           )
         ),
         O.getOrElseW(() => TE.right(void 0)),
