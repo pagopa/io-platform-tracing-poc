@@ -113,6 +113,16 @@ variable "snet_function_app_address_spaces_weu" {
   default = ["10.20.2.0/24"]
 }
 
+variable "snet_pendpoints_address_spaces_itn" {
+  type    = list(string)
+  default = ["10.10.3.0/24"]
+}
+
+variable "snet_pendpoints_address_spaces_weu" {
+  type    = list(string)
+  default = ["10.20.3.0/24"]
+}
+
 variable "app_service" {
   type = object({
     sku_name           = string
