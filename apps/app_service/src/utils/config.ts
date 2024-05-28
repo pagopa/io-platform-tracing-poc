@@ -56,6 +56,7 @@ export const IConfig = t.intersection([
 // No need to re-evaluate this object for each call
 const errorOrConfig: t.Validation<IConfig> = IConfig.decode({
   ...process.env,
+  HEAP_DUMP_ACTIVE: process.env.HEAP_DUMP_ACTIVE === "true",
   SERVER_PORT: process.env.PORT || DEFAULT_SERVER_PORT,
   isProduction: process.env.NODE_ENV === "production",
 });
