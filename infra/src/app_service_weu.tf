@@ -11,9 +11,11 @@ module "app_service_weu" {
   node_version = local.app_service_node_version
 
   health_check_path = local.app_service_health_check_path
+  app_command_line  = "yarn start"
 
   app_settings = merge(local.app_service_app_settings, {
     APP_ENV        = "production"
+
   })
 
   sticky_settings = [

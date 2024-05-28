@@ -16,10 +16,6 @@ locals {
     FETCH_KEEPALIVE_FREE_SOCKET_TIMEOUT = "30000"
     FETCH_KEEPALIVE_TIMEOUT             = "60000"
 
-    # Source data
-    COSMOSDB_NAME          = "db"
-    COSMOSDB_URI           = data.azurerm_cosmosdb_account.cosmos_free.endpoint
-    COSMOSDB_KEY           = data.azurerm_cosmosdb_account.cosmos_free.primary_key
     MESSAGE_CONTAINER_NAME = "messages"
 
     QueueStorageConnection = data.azurerm_storage_account.fnadmintest.primary_connection_string
@@ -66,7 +62,12 @@ module "function_app_itn" {
 
   app_settings = merge(
     local.function_app_settings,
-    {}
+    {
+      # Source data
+      COSMOSDB_NAME = azurerm_cosmosdb_sql_database.db_itn.name
+      COSMOSDB_URI  = azurerm_cosmosdb_account.cosmos_account_itn.endpoint
+      COSMOSDB_KEY  = azurerm_cosmosdb_account.cosmos_account_itn.primary_key
+    }
   )
 
   sticky_app_setting_names = []
