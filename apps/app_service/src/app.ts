@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import * as TE from "fp-ts/lib/TaskEither";
 import * as E from "fp-ts/lib/Either";
+import * as O from "fp-ts/lib/Option";
 import express from "express";
 import * as bodyParser from "body-parser";
 import { flow, pipe } from "fp-ts/lib/function";
@@ -12,12 +13,16 @@ import { GetResourceParams } from "./utils/types";
 import { CreateResource } from "../generated/definitions/CreateResource";
 import { IResponseType } from "@pagopa/ts-commons/lib/requests";
 import { CreatedResource } from "../generated/definitions/CreatedResource";
+import * as v8 from "v8";
+import { getBlobServiceClient, uploadFile } from "./utils/blob";
+import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const createApp = async () => {
   const config = getConfigOrThrow();
 
   const apiClient = FnClient(config.FN_CLIENT_KEY, config.FN_CLIENT_BASE_URL);
+
   const app = express();
 
   initTelemetryClient();
@@ -38,41 +43,45 @@ export const createApp = async () => {
     res.status(200).json({ status: "OK" })
   );
 
-  app.get("/resources/:fiscal_code/:resource_id", (req: express.Request, res: express.Response) =>
-    pipe(
-      {
-        fiscal_code: req.params.fiscal_code,
-        resource_id: req.params.resource_id,
-      },
-      GetResourceParams.decode,
-      E.mapLeft((errs) => Error(errorsToReadableMessages(errs).join("|"))),
-      TE.fromEither,
-      TE.chain((params) =>
-        TE.tryCatch(
-          () =>
-            apiClient.getResource({
-              fiscal_code: params.fiscal_code,
-              resource_id: params.resource_id,
-            }),
-          E.toError
-        )
-      ),
-      TE.chain(
-        flow(
-          E.mapLeft((errs) => Error(errorsToReadableMessages(errs).join("|"))),
-          TE.fromEither
-        )
-      ),
-      TE.chain(
-        TE.fromPredicate(
-          (response) => response.status === 204,
-          (wrongRes) =>
-            Error(`Error while calling api|ERROR=${JSON.stringify(wrongRes)}`)
-        )
-      ),
-      TE.map(() => res.status(200).json({ status: "OK" })),
-      TE.mapLeft((err) => res.status(500).json({ error: String(err) }))
-    )()
+  app.get(
+    "/resources/:fiscal_code/:resource_id",
+    (req: express.Request, res: express.Response) =>
+      pipe(
+        {
+          fiscal_code: req.params.fiscal_code,
+          resource_id: req.params.resource_id,
+        },
+        GetResourceParams.decode,
+        E.mapLeft((errs) => Error(errorsToReadableMessages(errs).join("|"))),
+        TE.fromEither,
+        TE.chain((params) =>
+          TE.tryCatch(
+            () =>
+              apiClient.getResource({
+                fiscal_code: params.fiscal_code,
+                resource_id: params.resource_id,
+              }),
+            E.toError
+          )
+        ),
+        TE.chain(
+          flow(
+            E.mapLeft((errs) =>
+              Error(errorsToReadableMessages(errs).join("|"))
+            ),
+            TE.fromEither
+          )
+        ),
+        TE.chain(
+          TE.fromPredicate(
+            (response) => response.status === 204,
+            (wrongRes) =>
+              Error(`Error while calling api|ERROR=${JSON.stringify(wrongRes)}`)
+          )
+        ),
+        TE.map(() => res.status(200).json({ status: "OK" })),
+        TE.mapLeft((err) => res.status(500).json({ error: String(err) }))
+      )()
   );
 
   app.post("/resource", (req: express.Request, res: express.Response) =>
@@ -82,11 +91,7 @@ export const createApp = async () => {
       E.mapLeft((errs) => Error(errorsToReadableMessages(errs).join("|"))),
       TE.fromEither,
       TE.chain((reqBody) =>
-        TE.tryCatch(
-          () =>
-            apiClient.postResource({body: reqBody}),
-          E.toError
-        )
+        TE.tryCatch(() => apiClient.postResource({ body: reqBody }), E.toError)
       ),
       TE.chain(
         flow(
@@ -111,6 +116,50 @@ export const createApp = async () => {
     // eslint-disable-next-line no-console
     console.log(`Example app service listening on port ${config.SERVER_PORT}`);
   });
+
+  if (config.HEAP_DUMP_ACTIVE) {
+    const heapWriter = pipe(
+      getBlobServiceClient(config.HEAP_DUMP_STORAGE_CONN_STRING),
+      (client) => ({
+        writeBlob: uploadFile(client, config.HEAP_CONTAINER_NAME),
+      })
+    );
+
+    const getFilename = (siteName?: NonEmptyString) =>
+      pipe(
+      new Date()
+        .toISOString()
+        .replace(/T/, "_")
+        .replace(/\..+/, "")
+        .replace(/\:/, "-"),
+        dateFmt => pipe(
+          siteName,
+          O.fromNullable,
+          O.map(name => `${dateFmt}-${name}`),
+          O.getOrElse(() => dateFmt)
+        )
+      );
+
+    setInterval(
+      async () =>
+        await pipe(
+          v8.getHeapStatistics(),
+          (memInfo) => (memInfo.used_heap_size * 100) / memInfo.heap_size_limit,
+          O.fromPredicate((perc) => perc > config.HEAP_LIMIT_PERCENTAGE),
+          O.map(() =>
+            pipe(v8.getHeapSnapshot(), (snapshotStream) =>
+              heapWriter.writeBlob(
+                `${getFilename(config.WEBSITE_DEPLOYMENT_ID)}-heapdump.heapsnapshot`,
+                snapshotStream
+              )
+            )
+          ),
+          O.getOrElseW(() => TE.right(void 0)),
+          TE.toUnion
+        )(),
+      60000 * config.HEAP_CHECK_FREQUENCY_IN_MINUTES
+    );
+  }
 };
 
 createApp().then(console.log).catch(console.error);

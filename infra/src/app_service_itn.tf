@@ -10,6 +10,10 @@ locals {
     FN_CLIENT_BASE_URL = "https://${module.function_app_itn.default_hostname}"
     FN_CLIENT_KEY = module.function_app_itn.master_key
 
+    HEAP_DUMP_ACTIVE              = false
+    HEAP_CONTAINER_NAME           = "heapdump"
+    HEAP_DUMP_STORAGE_CONN_STRING = data.azurerm_storage_account.fnadmintest.primary_connection_string
+
     // Fetch keepalive
     FETCH_KEEPALIVE_ENABLED             = "true"
     FETCH_KEEPALIVE_SOCKET_ACTIVE_TTL   = "110000"
