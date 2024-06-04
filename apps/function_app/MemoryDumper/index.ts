@@ -10,7 +10,7 @@ const updateExpiredCgnHandler = memoryDumperHandler(
     config.HEAP_CONTAINER_NAME
   ),
   config.HEAP_LIMIT_PERCENTAGE,
-  config.WEBSITE_DEPLOYMENT_ID
+  config.COMPUTERNAME
 );
 
 export default updateExpiredCgnHandler;

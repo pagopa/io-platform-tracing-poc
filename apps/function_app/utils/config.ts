@@ -29,7 +29,7 @@ const HeapdumpConfig = t.intersection([
     )
   }),
   t.partial({
-    WEBSITE_DEPLOYMENT_ID: NonEmptyString
+    COMPUTERNAME: NonEmptyString
   })
 ]);
 type HeapdumpConfig = t.TypeOf<typeof HeapdumpConfig>;

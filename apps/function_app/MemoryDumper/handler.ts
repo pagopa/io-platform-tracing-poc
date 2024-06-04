@@ -26,7 +26,7 @@ const getFilename = (siteName?: NonEmptyString) =>
 export const memoryDumperHandler = (
   heapWriter: ReturnType<typeof getHeapWriter>,
   heapLimitPercentage: NonNegativeInteger,
-  deploymentId: NonEmptyString
+  hostName: NonEmptyString
 ) => async (_context: Context): Promise<unknown> =>
   pipe(
     v8.getHeapStatistics(),
@@ -35,7 +35,7 @@ export const memoryDumperHandler = (
     O.map(() =>
       pipe(v8.getHeapSnapshot(), snapshotStream =>
         heapWriter.writeBlob(
-          `${getFilename(deploymentId)}-heapdump.heapsnapshot`,
+          `${getFilename(hostName)}-heapdump.heapsnapshot`,
           snapshotStream
         )
       )

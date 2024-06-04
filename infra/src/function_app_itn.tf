@@ -23,8 +23,8 @@ locals {
     STORAGE_CONNECTION_STRING      = data.azurerm_storage_account.fnadmintest.primary_connection_string
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.ai.instrumentation_key
 
-    HEAP_DUMP_ACTIVE              = false
     HEAP_CONTAINER_NAME           = "heapdump"
+    HEAP_CHECK_CRONTAB            = "*/15 * * * *"
     HEAP_DUMP_STORAGE_CONN_STRING = data.azurerm_storage_account.fnadmintest.primary_connection_string
 
   }
@@ -71,6 +71,8 @@ module "function_app_itn" {
       COSMOSDB_NAME = azurerm_cosmosdb_sql_database.db_itn.name
       COSMOSDB_URI  = azurerm_cosmosdb_account.cosmos_account_itn.endpoint
       COSMOSDB_KEY  = azurerm_cosmosdb_account.cosmos_account_itn.primary_key
+
+      "AzureWebJobs.MemoryDumper.Disabled" = "0"
     }
   )
 
