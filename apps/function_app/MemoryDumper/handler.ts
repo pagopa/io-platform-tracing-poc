@@ -27,7 +27,7 @@ export const memoryDumperHandler = (
   heapWriter: ReturnType<typeof getHeapWriter>,
   heapLimitPercentage: NonNegativeInteger,
   deploymentId: NonEmptyString
-) => async (context: Context): Promise<unknown> =>
+) => async (_context: Context): Promise<unknown> =>
   pipe(
     v8.getHeapStatistics(),
     memInfo => (memInfo.used_heap_size * 100) / memInfo.heap_size_limit,
