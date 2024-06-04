@@ -16,20 +16,17 @@ import {
   NonNegativeInteger,
   NonNegativeIntegerFromString
 } from "@pagopa/ts-commons/lib/numbers";
-import { withFallback } from "io-ts-types";
+import { withDefault } from "@pagopa/ts-commons/lib/types";
 
 const HeapdumpConfig = t.intersection([
   t.type({
     HEAP_DUMP_STORAGE_CONN_STRING: NonEmptyString,
-    HEAP_CHECK_CRONTAB: withFallback(
-      NonEmptyString,
-      "*/15 * * * *" as NonEmptyString
-    ),
+    HEAP_CHECK_CRONTAB: NonEmptyString,
     HEAP_CONTAINER_NAME: NonEmptyString,
-    HEAP_LIMIT_PERCENTAGE: withFallback(
+    HEAP_LIMIT_PERCENTAGE: withDefault(
       NonNegativeIntegerFromString,
       70 as NonNegativeInteger
-    )
+    ).pipe(NonNegativeInteger)
   }),
   t.partial({
     WEBSITE_DEPLOYMENT_ID: NonEmptyString
