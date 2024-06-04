@@ -23,6 +23,10 @@ locals {
     STORAGE_CONNECTION_STRING      = data.azurerm_storage_account.fnadmintest.primary_connection_string
     APPINSIGHTS_INSTRUMENTATIONKEY = azurerm_application_insights.ai.instrumentation_key
 
+    HEAP_DUMP_ACTIVE              = false
+    HEAP_CONTAINER_NAME           = "heapdump"
+    HEAP_DUMP_STORAGE_CONN_STRING = data.azurerm_storage_account.fnadmintest.primary_connection_string
+
   }
 }
 
