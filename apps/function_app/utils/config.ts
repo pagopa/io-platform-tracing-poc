@@ -24,9 +24,9 @@ const HeapdumpConfig = t.intersection([
     HEAP_CHECK_CRONTAB: NonEmptyString,
     HEAP_CONTAINER_NAME: NonEmptyString,
     HEAP_LIMIT_PERCENTAGE: withDefault(
-      NonNegativeIntegerFromString,
-      70 as NonNegativeInteger
-    ).pipe(NonNegativeInteger)
+      NonNegativeIntegerFromString.pipe(NonNegativeInteger),
+      "70" as unknown as NonNegativeInteger
+    )
   }),
   t.partial({
     WEBSITE_DEPLOYMENT_ID: NonEmptyString
