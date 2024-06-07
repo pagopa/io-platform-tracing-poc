@@ -12,44 +12,50 @@ import { pipe } from "fp-ts/lib/function";
 
 import { readableReport } from "@pagopa/ts-commons/lib/reporters";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
+import {
+  NonNegativeInteger,
+  NonNegativeIntegerFromString
+} from "@pagopa/ts-commons/lib/numbers";
 import { withDefault } from "@pagopa/ts-commons/lib/types";
-import { BooleanFromString } from "@pagopa/ts-commons/lib/booleans";
-import { CommaSeparatedListOf } from "./types";
 
-export const FeatureFlagType = t.union([
-  t.literal("none"),
-  t.literal("beta"),
-  t.literal("canary"),
-  t.literal("prod")
+const HeapdumpConfig = t.intersection([
+  t.type({
+    HEAP_DUMP_STORAGE_CONN_STRING: NonEmptyString,
+    HEAP_CHECK_CRONTAB: NonEmptyString,
+    HEAP_CONTAINER_NAME: NonEmptyString,
+    HEAP_LIMIT_PERCENTAGE: withDefault(
+      NonNegativeIntegerFromString.pipe(NonNegativeInteger),
+      "70" as unknown as NonNegativeInteger
+    )
+  }),
+  t.partial({
+    COMPUTERNAME: NonEmptyString
+  })
 ]);
-export type FeatureFlagType = t.TypeOf<typeof FeatureFlagType>;
+type HeapdumpConfig = t.TypeOf<typeof HeapdumpConfig>;
 
 // global app configuration
 export type IConfig = t.TypeOf<typeof IConfig>;
-export const IConfig = t.type({
-  /* eslint-disable sort-keys */
-  APPINSIGHTS_INSTRUMENTATIONKEY: NonEmptyString,
+export const IConfig = t.intersection([
+  t.type({
+    /* eslint-disable sort-keys */
+    APPINSIGHTS_INSTRUMENTATIONKEY: NonEmptyString,
 
-  COSMOSDB_KEY: NonEmptyString,
-  COSMOSDB_NAME: NonEmptyString,
-  COSMOSDB_URI: NonEmptyString,
+    COSMOSDB_KEY: NonEmptyString,
+    COSMOSDB_NAME: NonEmptyString,
+    COSMOSDB_URI: NonEmptyString,
 
-  MESSAGE_CONTAINER_NAME: NonEmptyString,
+    MESSAGE_CONTAINER_NAME: NonEmptyString,
 
-  QueueStorageConnection: NonEmptyString,
+    QueueStorageConnection: NonEmptyString,
 
-  FF_TYPE: withDefault(t.string, "none").pipe(FeatureFlagType),
-  USE_FALLBACK: withDefault(t.string, "false").pipe(BooleanFromString),
-  FF_BETA_TESTERS: withDefault(t.string, "").pipe(
-    CommaSeparatedListOf(NonEmptyString)
-  ),
-  FF_CANARY_USERS_REGEX: withDefault(t.string, "XYZ").pipe(NonEmptyString),
+    STORAGE_CONNECTION_STRING: NonEmptyString,
 
-  STORAGE_CONNECTION_STRING: NonEmptyString,
-
-  isProduction: t.boolean
-  /* eslint-enable sort-keys */
-});
+    isProduction: t.boolean
+    /* eslint-enable sort-keys */
+  }),
+  HeapdumpConfig
+]);
 
 // No need to re-evaluate this object for each call
 const errorOrConfig: t.Validation<IConfig> = IConfig.decode({

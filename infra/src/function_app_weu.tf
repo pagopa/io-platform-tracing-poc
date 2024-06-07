@@ -32,6 +32,8 @@ module "function_app_weu" {
       COSMOSDB_NAME = azurerm_cosmosdb_sql_database.db_weu.name
       COSMOSDB_URI  = azurerm_cosmosdb_account.cosmos_account_weu.endpoint
       COSMOSDB_KEY  = azurerm_cosmosdb_account.cosmos_account_weu.primary_key
+
+      "AzureWebJobs.MemoryDumper.Disabled" = "0"
     }
   )
 

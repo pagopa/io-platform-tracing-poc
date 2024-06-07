@@ -1,0 +1,11 @@
+{
+    "bindings": [
+      {
+          "schedule": "%HEAP_CHECK_CRONTAB%",
+          "name": "memoryDumperTimer",
+          "type": "timerTrigger",
+          "direction": "in"
+      }
+    ],
+    "scriptFile": "../dist/MemoryDumper/index.js"
+  }
