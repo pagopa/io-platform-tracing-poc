@@ -24,15 +24,9 @@ const HeapdumpConfig = t.union([
     t.type({
       HEAP_DUMP_ACTIVE: t.literal(true),
       HEAP_DUMP_STORAGE_CONN_STRING: NonEmptyString,
-      HEAP_CHECK_FREQUENCY_IN_MINUTES: withFallback(
-        NonNegativeIntegerFromString,
-        15 as NonNegativeInteger
-      ),
+      HEAP_CHECK_FREQUENCY_IN_MINUTES: NonNegativeInteger,
       HEAP_CONTAINER_NAME: NonEmptyString,
-      HEAP_LIMIT_PERCENTAGE: withFallback(
-        NonNegativeIntegerFromString,
-        70 as NonNegativeInteger
-      ),
+      HEAP_LIMIT_PERCENTAGE:NonNegativeInteger,
     }),
     t.partial({
       WEBSITE_DEPLOYMENT_ID: NonEmptyString,
@@ -63,6 +57,17 @@ export const IConfig = t.intersection([
 const errorOrConfig: t.Validation<IConfig> = IConfig.decode({
   ...process.env,
   HEAP_DUMP_ACTIVE: process.env.HEAP_DUMP_ACTIVE === "true",
+  HEAP_CHECK_FREQUENCY_IN_MINUTES: pipe(
+    process.env.HEAP_CHECK_FREQUENCY_IN_MINUTES,
+    NonNegativeIntegerFromString.decode,
+    E.getOrElse(() => 15 as NonNegativeInteger)
+  ),
+  HEAP_LIMIT_PERCENTAGE: pipe(
+    process.env.HEAP_LIMIT_PERCENTAGE,
+    NonNegativeIntegerFromString.decode,
+    E.getOrElse(() => 70 as NonNegativeInteger)
+  ),
+
   SERVER_PORT: process.env.PORT || DEFAULT_SERVER_PORT,
   isProduction: process.env.NODE_ENV === "production",
 });

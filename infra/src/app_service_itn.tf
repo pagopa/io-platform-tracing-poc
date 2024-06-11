@@ -22,6 +22,7 @@ locals {
     FETCH_KEEPALIVE_FREE_SOCKET_TIMEOUT = "30000"
     FETCH_KEEPALIVE_TIMEOUT             = "60000"
 
+    TEST_USERS = local.test_users
   })
 }
 
